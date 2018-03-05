@@ -1,7 +1,7 @@
 {
   "name": "supersaas-api-client",
   "version": "0.9.0",
-  "description": "Online bookings/appointments/calendars using the SuperSaaS scheduling platform.",
+  "description": "Online bookings/appointments/calendars in NodeJS using the SuperSaaS scheduling platform.",
   "main": "src/index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --recursive"
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:SuperSaaS/supersaas-nodejs-api.git"
+    "url": "git@github.com:SuperSaaS/supersaas-nodejs-api-client.git"
   },
   "engines": {
     "node": ">= 0.6"
@@ -30,7 +30,7 @@
     "scheduling system"
   ],
   "bugs": {
-    "url": "https://github.com/SuperSaaS/supersaas-nodejs-api/issues"
+    "url": "https://github.com/SuperSaaS/supersaas-nodejs-api-client/issues"
   },
   "homepage": "https://supersaas.com",
   "dependencies": {},

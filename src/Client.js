@@ -8,7 +8,7 @@
   const Schedules = require("./api/Schedules");
   const Users = require("./api/Users");
 
-  var DEFAULT_HOST = 'http://localhost:3000';
+  var DEFAULT_HOST = 'https://www.supersaas.com';
 
   var Client = function Client(configuration) {
     this.accountName = configuration.accountName;
@@ -25,7 +25,7 @@
     this.users = new Users(this);
   }
   Client.API_VERSION = '1';
-  Client.VERSION = '1.0.0';
+  Client.VERSION = '0.9.0';
 
   Client.prototype.get = function(path, query, callback) {
     return this.request('GET', path, null, query, callback);

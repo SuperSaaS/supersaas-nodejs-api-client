@@ -2,8 +2,7 @@
 
 Online bookings/appointments/calendars in NodeJS using the SuperSaaS scheduling platform - https://supersaas.com
 
-The SuperSaaS API provides services that can be used to add online booking and scheduling functionality to an existing 
-website or CRM software.
+The SuperSaaS API provides services that can be used to add online booking and scheduling functionality to an existing website or CRM software.
 
 ## Prerequisites
 
@@ -267,13 +266,7 @@ Contact: [support@supersaas.com](mailto:support@supersaas.com)
 
 ## Releases
 
-The package follows semantic versioning, i.e. MAJOR.MINOR.PATCH 
-
-**MAJOR**releases add or refactor API features and are likely to contain incompatible breaking changes
-
-**MINOR**releases add new backwards-compatible functionality
-
-**PATCH**releases apply backwards-compatible bugfixes or documentation updates
+The package follows [semantic versioning](https://semver.org/), i.e. MAJOR.MINOR.PATCH 
 
 ## License
 
