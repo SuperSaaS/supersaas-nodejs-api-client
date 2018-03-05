@@ -1,0 +1,40 @@
+{
+  "name": "supersaas-api-client",
+  "version": "0.9.0",
+  "description": "Online bookings/appointments/calendars using the SuperSaaS scheduling platform.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --recursive"
+  },
+  "files": [
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:SuperSaaS/supersaas-nodejs-api.git"
+  },
+  "engines": {
+    "node": ">= 0.6"
+  },
+  "author": "Travis Dunn",
+  "license": "MIT",
+  "keywords": [
+    "online appointment schedule",
+    "booking calendar",
+    "appointment book",
+    "reservation system",
+    "scheduling software",
+    "online booking system",
+    "scheduling system"
+  ],
+  "bugs": {
+    "url": "https://github.com/SuperSaaS/supersaas-nodejs-api/issues"
+  },
+  "homepage": "https://supersaas.com",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^5.0.0"
+  }
+}
