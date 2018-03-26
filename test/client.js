@@ -59,7 +59,6 @@ describe('Client', function() {
     Client.configure({
       accountName: 'account',
       password: 'password',
-      userName: 'user',
       host: 'http://test',
       dryRun: true,
       verbose: true

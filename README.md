@@ -39,7 +39,6 @@ The `Client` can be used either (1) through the singleton `Instance` property, e
     Client.configure({
       accountName: 'account',
       password: 'password',
-      userName: 'user',
       host: 'http://test',
       dryRun: true,
       verbose: true
@@ -260,7 +259,6 @@ The API Client uses error-first callbacks to indicate success or failure status;
 + [C# API Client](https://github.com/SuperSaaS/supersaas-csharp-api-client)
 + [Objective-C API Client](https://github.com/SuperSaaS/supersaas-objc-api-client)
 + [Go API Client](https://github.com/SuperSaaS/supersaas-go-api-client)
-+ [Javascript API Client](https://github.com/SuperSaaS/supersaas-javascript-api-client)
 
 Contact: [support@supersaas.com](mailto:support@supersaas.com)
 
