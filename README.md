@@ -158,9 +158,9 @@ Update an appointment by `scheduleId` and `appointmentId` with appointment attri
 
 #### Delete Appointment/Booking
 
-Delete a single appointment by `appointmentId`:
+Delete a single appointment by `scheduleId` and `appointmentId`:
 
-    Client.Instance.appointments.delete(12345, function(err, data) { 
+    Client.Instance.appointments.delete(12345, 67890, function(err, data) { 
         console.log(data); //=> "object"
     });
 

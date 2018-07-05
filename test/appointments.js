@@ -91,7 +91,7 @@ describe('Appointments', function() {
 
     it("deletes appointment", function(done) {
       var client = newClient();
-      client.appointments.delete(12345, function(err, data) {
+      client.appointments.delete(12345, 67890, function(err, data) {
         assert.equal(client.lastRequest.path, '/api/bookings/12345.json')
         done()
       })

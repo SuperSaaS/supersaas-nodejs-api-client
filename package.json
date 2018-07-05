@@ -1,6 +1,6 @@
 {
   "name": "supersaas-api-client",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Online bookings/appointments/calendars in NodeJS using the SuperSaaS scheduling platform.",
   "main": "src/index.js",
   "scripts": {

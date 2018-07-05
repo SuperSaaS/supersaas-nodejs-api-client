@@ -155,9 +155,10 @@
       } : null);
     }
 
-    Appointments.prototype.delete = function(appointmentId, callback) {
+    Appointments.prototype.delete = function(scheduleId, appointmentId, callback) {
+      var query = {schedule_id: validation.validateId(scheduleId)}
       var path = "/bookings/" + validation.validateId(appointmentId);
-      return this.client.delete(path, null, null, callback);
+      return this.client.delete(path, null, query, callback);
     }
 
     Appointments.prototype.changes = function(scheduleId, fromTime, slot, callback) {
