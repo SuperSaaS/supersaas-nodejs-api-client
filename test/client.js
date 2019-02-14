@@ -3,7 +3,7 @@ var SuperSaaS = require('../src/index');
 var Client = SuperSaaS.Client;
 
 function newClient() {
-  return new Client({dryRun: true, accountName: 'Test', password: 'testing123'})
+  return new Client({dryRun: true, accountName: 'Test', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'})
 }
 
 describe('Client', function() {
@@ -58,13 +58,13 @@ describe('Client', function() {
   it("configures instance", function() {
     Client.configure({
       accountName: 'account',
-      password: 'password',
+      api_key: 'xxxxxxxxxxxxxxxxxxxxxx',
       host: 'http://test',
       dryRun: true,
       verbose: true
     })
     assert.equal(Client.Instance.accountName, 'account')
-    assert.equal(Client.Instance.password, 'password')
+    assert.equal(Client.Instance.api_key, 'xxxxxxxxxxxxxxxxxxxxxx')
     assert.equal(Client.Instance.host, 'http://test')
     assert.equal(Client.Instance.dryRun, true)
     assert.equal(Client.Instance.verbose, true)

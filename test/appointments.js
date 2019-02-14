@@ -3,7 +3,7 @@ var SuperSaaS = require('../src/index');
 var Client = SuperSaaS.Client;
 
 function newClient() {
-  return new Client({dryRun: true, accountName: 'Test', password: 'testing123'})
+  return new Client({dryRun: true, accountName: 'Test', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'})
 }
 
 function appointmentAttributes() {
