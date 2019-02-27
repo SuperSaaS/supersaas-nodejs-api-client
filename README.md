@@ -7,7 +7,7 @@ The SuperSaaS API provides services that can be used to add online booking and s
 ## Prerequisites
 
 1. [Register for a (free) SuperSaaS account](https://www.supersaas.com/accounts/new), and
-2. get your account name and password.
+2. get your account name and API key on the [Account Info](https://www.supersaas.com/accounts/edit) page.
 
 ##### Dependencies
 
@@ -38,7 +38,7 @@ The `Client` can be used either (1) through the singleton `Instance` property, e
     
     Client.configure({
       accountName: 'account',
-      password: 'password',
+      api_key: 'xxxxxxxxxxxxxxxxxxxxxx',
       host: 'http://test',
       dryRun: true,
       verbose: true
@@ -47,20 +47,20 @@ The `Client` can be used either (1) through the singleton `Instance` property, e
     
 Or else by (2) simply creating a new client instance manually, e.g.
     
-    var client = new Client({accountName: 'accnt', password: 'pwd'});
+    var client = new Client({accountName: 'accnt', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'});
 
 > Note, ensure that `configure` is called before `Instance`, otherwise the client will be initialized with configuration defaults.
 
-If the client isn't configured explicitly, it will use default `ENV` variables for the account name, password, and user name.
+If the client isn't configured explicitly, it will use default `ENV` variables for the account name, api key, and user name.
 
     process.env.SSS_API_ACCOUNT_NAME = 'your-env-supersaas-account-name';
-    process.env.SSS_API_PASSWORD = 'your-env-supersaas-account-name';
+    process.env.SSS_API_KEY = 'your-supersaas-account-api-key';
     SuperSaaS.Client.Instance.accountName; //=> 'your-env-supersaas-account-name';
-    SuperSaaS.Client.Instance.password; //=> 'your-env-supersaas-account-name';
+    SuperSaaS.Client.Instance.api_key; //=> 'your-env-supersaas-account-name';
     
 All configuration options can be individually set on the client.
 
-    SuperSaaS.Client.Instance.password = 'pwd';
+    SuperSaaS.Client.Instance.api_key = 'xxxxxxxxxxxxxxxxxxxxxx';
     SuperSaaS.Client.Instance.verbose = true;
     ...
 

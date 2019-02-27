@@ -12,7 +12,7 @@
 
   var Client = function Client(configuration) {
     this.accountName = configuration.accountName;
-    this.password = configuration.password;
+    this.api_key = configuration.api_key;
     this.host = configuration.host || DEFAULT_HOST;
     this.dryRun = configuration.dryRun;
     this.verbose = configuration.verbose;
@@ -49,15 +49,15 @@
     if (!this.accountName) {
       throw new Error("Account name not configured. Call `Client.configure`.");
     }
-    if (!this.password) {
-      throw new Error("Account password not configured. Call `Client.configure`.");
+    if (!this.api_key) {
+      throw new Error("Account API key not configured. Call `Client.configure`.");
     }
 
     var headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'User-Agent': this._userAgent(),
-      'Authorization': 'Basic ' + new Buffer(this.accountName + ':' + this.password).toString('base64')
+      'Authorization': 'Basic ' + new Buffer(this.accountName + ':' + this.api_key).toString('base64')
     }
 
     if (!['GET', 'POST', 'PUT', 'DELETE'].includes(httpMethod)) {
@@ -163,7 +163,7 @@
 
   var config = {
     accountName: process.env['SSS_API_ACCOUNT_NAME'],
-    password: process.env['SSS_API_PASSWORD'],
+    api_key: process.env['SSS_API_KEY'],
     host: DEFAULT_HOST,
     dryRun: false,
     verbose: false
