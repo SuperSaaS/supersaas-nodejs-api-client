@@ -4,7 +4,8 @@
   "description": "Online bookings/appointments/calendars in NodeJS using the SuperSaaS scheduling platform.",
   "main": "src/index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --recursive"
+    "test": "./node_modules/mocha/bin/mocha --recursive",
+    "schedules": "node -e 'require(\"./examples/schedules\").listSchedules()'"
   },
   "files": [
     "src/",

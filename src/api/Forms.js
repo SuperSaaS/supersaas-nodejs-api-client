@@ -18,7 +18,7 @@
         if (err) {
           callback(err);
         } else {
-          var res = data.map (function(attributes) { new Form(attributes); });
+          var res = data.map (function(attributes) { return new Form(attributes); });
           callback(null, res)
         }
       } : null);
