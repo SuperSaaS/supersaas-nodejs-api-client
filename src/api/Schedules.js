@@ -14,7 +14,7 @@
         if (err) {
           callback(err);
         } else {
-          var res = data.map (function(attributes) { new Schedule(attributes); });
+          var res = data.map (function(attributes) { return new Schedule(attributes); });
           callback(null, res)
         }
       } : null);
@@ -27,7 +27,7 @@
         if (err) {
           callback(err);
         } else {
-          var res = data.map (function(attributes) { new Resource(attributes); });
+          var res = data.map (function(attributes) { return new Resource(attributes); });
           callback(null, res)
         }
       } : null);

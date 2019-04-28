@@ -5,9 +5,9 @@
   module.exports = (function() {
     function mapSlotsOrBookings(obj, slot) {
       if (slot) {
-        return (obj['slots'] || []).map (function(attributes) { new Slot(attributes) });
+        return (obj['slots'] || []).map (function(attributes) { return new Slot(attributes) });
       } else {
-        return (obj['bookings'] || []).map (function(attributes) { new Appointment(attributes) });
+        return (obj['bookings'] || []).map (function(attributes) { return new Appointment(attributes) });
       }
     }
 

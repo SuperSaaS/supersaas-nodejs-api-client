@@ -220,6 +220,14 @@ Get a single form by `form_id`:
         console.log(data); //=> "Form"
     });
 
+## Examples
+
+The ./examples folder contains npm executable scripts demonstrating how to use the API Client for common requests.
+
+The examples will require your account name and api key. These can be set as environment variables. e.g.
+
+    SSS_API_KEY=xxxxxxxxxxxxxxxxxxxxxx && SSS_API_ACCOUNT_NAME=myaccountname && npm run schedules
+
 ## Testing
 
 The HTTP requests can be stubbed by configuring the client with the `dryRun` option, e.g.

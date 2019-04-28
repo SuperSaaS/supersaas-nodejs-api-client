@@ -20,7 +20,7 @@
         if (err) {
           callback(err);
         } else {
-          var res = data.map (function(attributes) { new User(attributes); });
+          var res = data.map (function(attributes) { return new User(attributes); });
           callback(null, res);
         }
       } : null);
