@@ -1,6 +1,7 @@
 (function() {
   var validation  = require("./validation");
   var Appointment = require("../models/Appointment");
+  var Slot = require("../models/Slot");
 
   module.exports = (function() {
     function mapSlotsOrBookings(obj, slot) {
