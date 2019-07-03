@@ -136,7 +136,7 @@ Definition:
     
 Example:
 
-    Client.Instance.users.update(12345, {"name": ..., ...}, null, true, function(err, data) { 
+    Client.Instance.users.update(12345, {"name": ..., ...}, null, function(err, data) { 
         console.log(data); //=> "object"
     });
     
@@ -175,7 +175,7 @@ Delete a single user by `userId`:
 
 Definition:
 
-    Client.Instance.users.delete(userId, webhook, callback)
+    Client.Instance.users.delete(userId, callback)
     
 Example:
 
@@ -199,7 +199,7 @@ Example:
 
 #### Get Agenda
 
-Get agenda (upcoming) appointments of a single user by `scheduleId` and `userId`, with `form` and `slot` view params:
+Get agenda (upcoming) appointments of a single user by `scheduleId` and `userId`, with `fromTime` and `slot` view params:
 
 Definition:
 
@@ -207,17 +207,17 @@ Definition:
     
 Example:
 
-    Client.Instance.appointments.agenda(12345, 67890, true, true, function(err, data) { 
+    Client.Instance.appointments.agenda(12345, 54321, '2019-01-31 00:00:00', true, function(err, data) { 
         console.log(data); //=> ["Appointment", ...]
     });
 
 #### Get Available Appointments/Bookings
 
-Get available appointments for given schedule by `scheduleId`, with `from` time and `lengthMinutes` and `resource` params:
+Get available appointments for given schedule by `scheduleId`, with `fromTime`, `lengthMinutes` and `resource`, `full` and  `limit` params:
 
 Definition:
 
-    Client.Instance.appointments.agenda(scheduleId, fromTime, lengthMinutes, resource, full, limit, callback)
+    Client.Instance.appointments.available(scheduleId, fromTime, lengthMinutes, resource, full, limit, callback)
     
 Example:
 
@@ -245,7 +245,7 @@ Update an appointment by `scheduleId` and `appointmentId` with appointment attri
 
 Definition:
 
-    Client.Instance.appointments.update(scheduleId, userId, attributes, form, webhook, callback)
+    Client.Instance.appointments.update(scheduleId, appointmentId, attributes, form, webhook, callback)
     
 Example:
 
@@ -287,7 +287,7 @@ Delete a single appointment by `scheduleId` and `appointmentId`:
 
 Definition:
 
-    Client.Instance.appointments.list(scheduleId, appointmentId, callback)
+    Client.Instance.appointments.delete(scheduleId, appointmentId, callback)
     
 Example:
 
@@ -297,7 +297,7 @@ Example:
 
 #### List Template Forms
 
-Get all forms by template `formId`, with `from` time param:
+Get all forms by template `formId`, with `fromTime` param:
 
 Definition:
 
