@@ -1,14 +1,13 @@
 (function() {
   var validation  = require("./validation");
   var Appointment = require("../models/Appointment");
-  var Slot = require("../models/Slot");
 
   module.exports = (function() {
     function mapSlotsOrBookings(obj, slot) {
       if (slot) {
-        return (obj['slots'] || []).map (function(attributes) { return new Slot(attributes) });
+        return (obj['slots'] || []).map (function(attributes) { return new Appointment.slot(attributes) });
       } else {
-        return (obj['bookings'] || []).map (function(attributes) { return new Appointment(attributes) });
+        return (obj['bookings'] || obj || []).map (function(attributes) { return new Appointment.appointment(attributes) });
       }
     }
 
@@ -28,7 +27,7 @@
         if (err) {
           callback(err);
         } else {
-          var res = mapSlotsOrBookings(data, slot);
+          var res = mapSlotsOrBookings(data, false);
           callback(null, res);
         }
       } : null);
@@ -48,7 +47,7 @@
         if (err) {
           callback(err);
         } else {
-          var res = mapSlotsOrBookings(data);
+          var res = mapSlotsOrBookings(data, true);
           callback(null, res);
         }
       } : null);
@@ -80,7 +79,7 @@
         if (err) {
           callback(err);
         } else {
-          callback(null, new Appointment(data));
+          callback(null, new Appointment.appointment(data));
         }
       } : null);
     }
@@ -91,8 +90,8 @@
       var query = {webhook: webhook && webhook !== callback ? 'true' : null, schedule_id: scheduleId};
       var params = {
         schedule_id: validation.validateId(scheduleId),
-        user_id: validation.validateId(userId),
-        form: form ? true : nil,
+        form: form ? true : null,
+        user_id: attributes['user_id'],
         booking: {
           start: attributes['start'],
           finish: attributes['finish'],
@@ -116,7 +115,7 @@
         if (err) {
           callback(err);
         } else {
-          callback(null, new Appointment(params.booking));
+          callback(null, new Appointment.appointment(params.booking));
         }
       } : null);
     }
@@ -151,7 +150,7 @@
         if (err) {
           callback(err);
         } else {
-          callback(null, new Appointment(params.booking));
+          callback(null, new Appointment.appointment(params.booking));
         }
       } : null);
     }

@@ -12,7 +12,6 @@
       Form: require("./models/Form"),
       Resource: require("./models/Resource"),
       Schedule: require("./models/Schedule"),
-      Slot: require("./models/Slot"),
       User: require("./models/User")
     }
   };
