@@ -6,7 +6,6 @@
     function Users(client) {
       this.client = client;
     }
-    Users.ROLES = [3, 4, -1];
 
     Users.prototype.list = function(form, limit, offset, callback) {
       callback = validation.getCallbackFunctionArg(arguments)
@@ -54,8 +53,8 @@
           field_1: attributes['field_1'],
           field_2: attributes['field_2'],
           super_field: attributes['super_field'],
-          credit: attributes['credit'] ? validation.validateNumber(attributes['credit']) : null,
-          role: attributes['role'] ? validation.validateOptions(attributes['role'], Users.ROLES) : null
+          credit: attributes['credit'],
+          role: attributes['role']
         }
       }
       return this.client.post(path, params, query, callback ? function(err, data) {
@@ -84,8 +83,8 @@
           field_1: attributes['field_1'],
           field_2: attributes['field_2'],
           super_field: attributes['super_field'],
-          credit: attributes['credit'] ? validation.validateNumber(attributes['credit']) : null,
-          role: attributes['role'] ? validation.validateOptions(attributes['role'], Users.ROLES) : null
+          credit: attributes['credit'],
+          role: attributes['role']
         }
       }
       return this.client.put(path, params, query, callback ? function(err, data) {
