@@ -185,7 +185,7 @@ Example:
     
 #### Get Recent Changes
 
-Get recently changed appointments by `scheduleId`, with `fromTime` time and `slot` view params:
+Get recently changed appointments by `scheduleId`, with `fromTime` and `slot` view params:
 
 Definition:
 
@@ -213,7 +213,7 @@ Example:
 
 #### Get Available Appointments/Bookings
 
-Get available appointments for given schedule by `scheduleId`, with `fromTime`, `lengthMinutes` and `resource`, `full` and  `limit` params:
+Get available appointments for given schedule by `scheduleId`, with `fromTime`, `lengthMinutes`, `resource`, `full` and  `limit` params:
 
 Definition:
 
