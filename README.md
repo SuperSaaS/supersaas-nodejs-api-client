@@ -47,7 +47,7 @@ The `Client` can be used either (1) through the singleton `Instance` property, e
     
 Or else by (2) simply creating a new client instance manually, e.g.
     
-    var client = new Client({accountName: 'accnt', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'});
+    var client = new Client({accountName: 'account', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'});
 
 > Note, ensure that `configure` is called before `Instance`, otherwise the client will be initialized with configuration defaults.
 
@@ -74,9 +74,9 @@ All API methods accept an optional error-first callback with a signature of `fun
 
 > Note, methods with optional arguments can accept a callback as the final argument for any of those arguments. For example:
 
-Method with the last argument after optional `form` and `webhook` arguments:
+Method with the last argument after optional `userId` and `webhook` arguments:
 
-    Client.Instance.users.create(attributes, form, webhook, function(err, data){});
+    Client.Instance.users.create(attributes, userId, webhook, function(err, data){});
 
 Method without optional arguments:
 
@@ -86,6 +86,12 @@ Method without optional arguments:
 
 Get all account schedules:
 
+Definition:
+
+    Client.Instance.schedules.list(callback)
+    
+Example:
+
     Client.Instance.schedules.list(function(err, data) { 
         console.log(data); //=> ["Schedule", ...]
     });
@@ -93,6 +99,12 @@ Get all account schedules:
 #### List Resource
 
 Get all services/resources by `scheduleId`:
+
+Definition:
+
+    Client.Instance.schedules.resources(scheduleId, callback)
+    
+Example:
 
     Client.Instance.schedules.resources(12345, function(err, data) { 
         console.log(data); //=> ["Resource", ...]
@@ -104,6 +116,12 @@ _Note: does not work for capacity type schedules._
 
 Create a user with user attributes params:
 
+Definition:
+
+    Client.Instance.users.create(attributes, userId, webhook, callback)
+    
+Example:
+ 
     Client.Instance.users.create({"name": ..., ...}, null, true, function(err, data) { 
         console.log(data); //=> "User"
     });
@@ -112,21 +130,26 @@ Create a user with user attributes params:
 
 Update a user by `userId` with user attributes params:
 
-    Client.Instance.users.update(12345, {"name": ..., ...}, null, true, function(err, data) { 
+Definition:
+
+    Client.Instance.users.update(userId, attributes, webhook, callback)
+    
+Example:
+
+    Client.Instance.users.update(12345, {"name": ..., ...}, null, function(err, data) { 
         console.log(data); //=> "object"
     });
     
-#### Delete User
 
-Delete a single user by `userId`:
-
-    Client.Instance.users.delete(12345, function(err, data) { 
-        console.log(data); //=> "object"
-    });
-    
 #### Get User
 
 Get a single user by `userId`:
+
+Definition:
+
+    Client.Instance.users.get(userId, callback)
+    
+Example:
 
     Client.Instance.users.get(12345, function(err, data) { 
         console.log(data); //=> "User"
@@ -136,13 +159,81 @@ Get a single user by `userId`:
 
 Get all users with optional `form` and `limit`/`offset` pagination params:
 
+Definition:
+
+    Client.Instance.users.list(form, limit, offset, callback)
+    
+Example:
+
     Client.Instance.users.list(false, 25, 0, function(err, data) { 
         console.log(data); //=> ["User", ...]
+    });
+
+#### Delete User
+
+Delete a single user by `userId`:
+
+Definition:
+
+    Client.Instance.users.delete(userId, callback)
+    
+Example:
+
+    Client.Instance.users.delete(12345, function(err, data) { 
+        console.log(data); //=> "object"
+    });
+    
+#### Get Recent Changes
+
+Get recently changed appointments by `scheduleId`, with `fromTime` and `slot` view params:
+
+Definition:
+
+    Client.Instance.appointments.changes(scheduleId, fromTime, slot, callback)
+    
+Example:
+
+    Client.Instance.appointments.changes(12345, '2018-01-31 00:00:00', true, function(err, data) { 
+        console.log(data); //=> ["Appointment", ...]
+    });
+
+#### Get Agenda
+
+Get agenda (upcoming) appointments of a single user by `scheduleId` and `userId`, with `fromTime` and `slot` view params:
+
+Definition:
+
+    Client.Instance.appointments.agenda(scheduleId, userId, fromTime, slot, callback)
+    
+Example:
+
+    Client.Instance.appointments.agenda(12345, 54321, '2019-01-31 00:00:00', true, function(err, data) { 
+        console.log(data); //=> ["Appointment", ...]
+    });
+
+#### Get Available Appointments/Bookings
+
+Get available appointments for given schedule by `scheduleId`, with `fromTime`, `lengthMinutes`, `resource`, `full` and  `limit` params:
+
+Definition:
+
+    Client.Instance.appointments.available(scheduleId, fromTime, lengthMinutes, resource, full, limit, callback)
+    
+Example:
+
+    Client.Instance.appointments.available(12345, '2018-01-31 00:00:00', 15, 'My Class', function(err, data) { 
+        console.log(data); //=> ["Appointment", ...]
     });
 
 #### Create Appointment/Booking
 
 Create an appointment by `scheduleId` and `userId` with appointment attributes and `form` and `webhook` params:
+
+Definition:
+
+    Client.Instance.appointments.create(scheduleId, userId, attributes, form, webhook, callback)
+    
+Example:
 
     Client.Instance.appointments.create(12345, 67890, {"full_name": ...}, true, true, function(err, data) { 
         console.log(data); //=> "Appointment"
@@ -152,15 +243,13 @@ Create an appointment by `scheduleId` and `userId` with appointment attributes a
 
 Update an appointment by `scheduleId` and `appointmentId` with appointment attributes params:
 
-    Client.Instance.appointments.update(12345, 67890, {"full_name": ...}, function(err, data) { 
-        console.log(data); //=> "object"
-    });
+Definition:
 
-#### Delete Appointment/Booking
+    Client.Instance.appointments.update(scheduleId, appointmentId, attributes, form, webhook, callback)
+    
+Example:
 
-Delete a single appointment by `scheduleId` and `appointmentId`:
-
-    Client.Instance.appointments.delete(12345, 67890, function(err, data) { 
+    Client.Instance.appointments.update(12345, 67890, {"full_name": ...}, true, true, function(err, data) { 
         console.log(data); //=> "object"
     });
 
@@ -168,53 +257,67 @@ Delete a single appointment by `scheduleId` and `appointmentId`:
 
 Get a single appointment by `scheduleId` and `appointmentId`:
 
+Definition:
+
+    Client.Instance.appointments.get(scheduleId, appointmentId, callback)
+    
+Example:
+
     Client.Instance.appointments.get(12345, 67890, function(err, data) { 
         console.log(data); //=> ["Appointment", ...]
     });
 
 #### List Appointments/Bookings
 
-Get agenda (upcoming) appointments by `scheduleId` and `userId`, with `form` and `slot` view params:
+Get upcoming appointments by `scheduleId` with `form`, `startTime` and `limit` view params:
 
-    Client.Instance.appointments.list(12345, 67890, true, true, function(err, data) { 
+Definition:
+
+    Client.Instance.appointments.list(scheduleId, form, startTime, limit, callback)
+    
+Example:
+
+    Client.Instance.appointments.list(12345, true, '2019-01-31 00:00:00', function(err, data) { 
         console.log(data); //=> ["Appointment", ...]
     });
+    
+#### Delete Appointment/Booking
 
-#### Get Agenda
+Delete a single appointment by `scheduleId` and `appointmentId`:
 
-Get agenda (upcoming) appointments by `scheduleId` and `userId`, with `form` and `slot` view params:
+Definition:
 
-    Client.Instance.appointments.agenda(12345, 67890, true, true, function(err, data) { 
-        console.log(data); //=> ["Appointment", ...]
-    });
+    Client.Instance.appointments.delete(scheduleId, appointmentId, callback)
+    
+Example:
 
-#### Get Available Appointments/Bookings
-
-Get available appointments by `scheduleId`, with `from` time and `lengthMinutes` and `resource` params:
-
-    Client.Instance.appointments.available(12345, '2018-1-31 00:00:00', 15, 'My Class', function(err, data) { 
-        console.log(data); //=> ["Appointment", ...]
-    });
-
-#### Get Recent Changes
-
-Get recently changed appointments by `scheduleId`, with `from` time and `slot` view params:
-
-    Client.Instance.appointments.changes(12345, '2018-1-31 00:00:00', true, function(err, data) { 
-        console.log(data); //=> ["Appointment", ...]
+    Client.Instance.appointments.delete(12345, 67890, function(err, data) { 
+        console.log(data); //=> "object"
     });
 
 #### List Template Forms
 
-Get all forms by template `superformId`, with `from` time param:
+Get all forms by template `formId`, with `fromTime` param:
 
-    Client.Instance.forms.list(12345, '2018-1-31 00:00:00', function(err, data) { 
+Definition:
+
+    Client.Instance.forms.list(formId, fromTime, callback)
+    
+Example:
+
+    Client.Instance.forms.list(12345, '2019-01-31 00:00:00', function(err, data) { 
         console.log(data); //=> ["Form", ...]
     });
 
 #### Get Form
 
-Get a single form by `form_id`:
+Get a single form by `formId`:
+
+Definition:
+
+    Client.Instance.forms.get(formId, callback)
+    
+Example:
 
     Client.Instance.forms.get(12345, function(err, data) { 
         console.log(data); //=> "Form"
