@@ -95,7 +95,7 @@
     var verboseLogging = this.verbose;
 
     req.on("response", function(res) {
-      var location = (res.statusCode == 201 && httpMethod == 'POST') ? res.headers.location: null
+      var location = (res.statusCode == 201 && httpMethod == 'POST') ? res.headers.location : null
       res.setEncoding('utf8');
       var body = "";
 
