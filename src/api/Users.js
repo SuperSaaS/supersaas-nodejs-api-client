@@ -61,7 +61,7 @@
         if (err) {
           callback(err);
         } else {
-          callback(null, new User(params.user));
+          callback(null, {location: data});
         }
       } : null);
     }

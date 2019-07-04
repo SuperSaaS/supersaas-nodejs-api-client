@@ -91,10 +91,11 @@
       return {};
     }
 
-
     var req = this._requestModule(parsedUrl).request(options);
     var verboseLogging = this.verbose;
+
     req.on("response", function(res) {
+      var location = (res.statusCode == 201 && httpMethod == 'POST') ? res.headers.location: null
       res.setEncoding('utf8');
       var body = "";
 
@@ -107,10 +108,9 @@
           console.log(body);
           console.log("==============================");
         }
-
         if (callback) {
           try {
-            var obj = body && body.length ? JSON.parse(body) : "";
+            var obj = location || (body && body.length ? JSON.parse(body) : "");
             if (obj.errors) {
               callback(obj);
             } else {

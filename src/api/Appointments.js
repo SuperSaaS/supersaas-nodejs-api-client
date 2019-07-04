@@ -115,7 +115,7 @@
         if (err) {
           callback(err);
         } else {
-          callback(null, new Appointment.appointment(params.booking));
+          callback(null, {location: data});
         }
       } : null);
     }
