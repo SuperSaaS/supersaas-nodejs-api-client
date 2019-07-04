@@ -25,7 +25,7 @@
     this.users = new Users(this);
   }
   Client.API_VERSION = '1';
-  Client.VERSION = '1.0.2';
+  Client.VERSION = '1.1.0';
 
   Client.prototype.get = function(path, query, callback) {
     return this.request('GET', path, null, query, callback);
