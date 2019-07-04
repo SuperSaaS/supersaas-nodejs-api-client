@@ -1,8 +1,6 @@
 (function() {
   var Form = require("./Form");
-  var Slot = require("./Slot");
-
-  var Appointment = function Appointment(attributes) {
+  var Appointment = function(attributes) {
     if (!attributes) return
 
     for (var key in attributes) {
@@ -16,8 +14,28 @@
         }
       }
     }
-  };
+  }
 
-  module.exports = Appointment;
+  var Slot = function(attributes) {
+    if (!attributes) return
+
+    this.bookings = []
+    for (var key in attributes) {
+      if (attributes.hasOwnProperty(key)) {
+        if (key === 'bookings' && typeof attributes[key] === 'object') {
+          for (var i = 0; i < attributes.bookings.length; i++) {
+            this.bookings.push(new Appointment(attributes.bookings[i]))
+          }
+        } else {
+          this[key] = attributes[key];
+        }
+      }
+    }
+  }
+
+  module.exports = {
+    appointment: Appointment,
+    slot: Slot
+  }
 
 }).call(this);
