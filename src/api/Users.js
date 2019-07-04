@@ -72,7 +72,7 @@
       var query = {webhook: webhook && webhook !== callback ? 'true' : null};
       var params = {
         user: {
-          name: validation.validatePresent(attributes['name']),
+          name: attributes['name'],
           email: attributes['email'],
           password: attributes['password'],
           full_name: attributes['full_name'],
