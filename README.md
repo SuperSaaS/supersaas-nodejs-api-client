@@ -123,7 +123,7 @@ Definition:
 Example:
  
     Client.Instance.users.create({"name": ..., ...}, null, true, function(err, data) { 
-        console.log(data); //=> "User"
+        console.log(data); //=> {location: 'https://www.supersaas.com/api/users/12345678.json}
     });
 
 #### Update User
@@ -236,7 +236,7 @@ Definition:
 Example:
 
     Client.Instance.appointments.create(12345, 67890, {"full_name": ...}, true, true, function(err, data) { 
-        console.log(data); //=> "Appointment"
+        console.log(data); //=> {location: 'https://www.supersaas.com/api/bookings/12345678.json}
     });
 
 #### Update Appointment/Booking
