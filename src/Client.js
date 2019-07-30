@@ -57,7 +57,7 @@
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'User-Agent': this._userAgent(),
-      'Authorization': 'Basic ' + new Buffer(this.accountName + ':' + this.api_key).toString('base64')
+      'Authorization': 'Basic ' + new Buffer.from(this.accountName + ':' + this.api_key).toString('base64')
     }
 
     if (!['GET', 'POST', 'PUT', 'DELETE'].includes(httpMethod)) {

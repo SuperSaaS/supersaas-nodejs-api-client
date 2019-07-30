@@ -27,7 +27,7 @@ describe('Client', function() {
       assert.equal(client.lastRequest.headers['Accept'], 'application/json')
       assert.equal(client.lastRequest.headers['Content-Type'], 'application/json')
 
-      auth = new Buffer(client.accountName + ':' + client.api_key).toString('base64')
+      auth = new Buffer.from(client.accountName + ':' + client.api_key).toString('base64')
       assert.equal(client.lastRequest.headers['Authorization'], 'Basic ' + auth)
       done()
     });
