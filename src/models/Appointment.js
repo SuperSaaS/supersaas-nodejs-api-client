@@ -1,7 +1,7 @@
 (function() {
   var Form = require("./Form");
   var Appointment = function(attributes) {
-    if (!attributes) return
+    if (!attributes) return;
 
     for (var key in attributes) {
       if (attributes.hasOwnProperty(key)) {
@@ -14,12 +14,11 @@
         }
       }
     }
-  }
+  };
 
   var Slot = function(attributes) {
-    if (!attributes) return
-
-    this.bookings = []
+    if (!attributes) return;
+    this.bookings = [];
     for (var key in attributes) {
       if (attributes.hasOwnProperty(key)) {
         if (key === 'bookings' && typeof attributes[key] === 'object') {
@@ -31,7 +30,7 @@
         }
       }
     }
-  }
+  };
 
   module.exports = {
     appointment: Appointment,

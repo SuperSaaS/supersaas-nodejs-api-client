@@ -196,6 +196,20 @@ Example:
     Client.Instance.appointments.changes(12345, '2018-01-31 00:00:00', true, function(err, data) { 
         console.log(data); //=> ["Appointment", ...]
     });
+    
+#### Get list of appointments
+
+Get list of appointments by `schedule_id`, with `today`,`from` time, `to` time and `slot` view param:
+     
+Definition:
+
+    Client.Instance.appointments.range(scheduleId, today, fromTime, to, slot, callback)
+    
+Example:
+
+    Client.Instance.appointments.range(12345, false, '2018-01-31 00:00:00', '2018-02-31 00:00:00', true, function(err, data) { 
+        console.log(data); //=> ["Appointment", ...]
+    });
 
 #### Get Agenda
 
