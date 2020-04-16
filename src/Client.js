@@ -123,7 +123,7 @@
       });
     })
     req.on('error', function(e) {
-      console.log('ERRRRRRRR',e)
+      console.log('Error',e)
       if (callback) {
         callback(e)
       }
