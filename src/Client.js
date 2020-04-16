@@ -25,7 +25,7 @@
     this.users = new Users(this);
   }
   Client.API_VERSION = '1';
-  Client.VERSION = '1.2.1';
+  Client.VERSION = '1.2.2';
 
   Client.prototype.get = function(path, query, callback) {
     return this.request('GET', path, null, query, callback);
@@ -123,7 +123,7 @@
       });
     })
     req.on('error', function(e) {
-      console.log('ERRRRRRRR',e)
+      console.log('Error',e)
       if (callback) {
         callback(e)
       }

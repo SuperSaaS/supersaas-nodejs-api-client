@@ -40,7 +40,6 @@
     },
 
     validateDatetime: function(value) {
-      console.log(value && DATETIME_REGEX.test(value),value)
       if (value && typeof value === "string" && DATETIME_REGEX.test(value)) {
         return value
       } else if (isDate(value)) {
