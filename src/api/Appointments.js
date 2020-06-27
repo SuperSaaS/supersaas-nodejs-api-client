@@ -161,14 +161,15 @@
       return this.client.delete(path, null, query, callback);
     };
 
-    Appointments.prototype.range = function(scheduleId, today, fromTime, to,  slot, callback) {
+    Appointments.prototype.range = function(scheduleId, today, fromTime, to,  slot, limit, callback) {
       callback = validation.getCallbackFunctionArg(arguments);
       var path = "/range/" + validation.validateId(scheduleId);
       var query = {
-        today: today,
-        from: validation.validateDatetime(fromTime),
-        to: validation.validateDatetime(to),
-        slot: slot && slot !== callback ? true : null
+        today: today && today !== callback ? true : null,
+        from: fromTime && fromTime !== callback ? validation.validateDatetime(fromTime) : null,
+        to: to && to!== callback ? validation.validateDatetime(to) : null,
+        slot: slot && slot !== callback ? true : null,
+        limit: limit && limit !==callback ? validation.validateNumber(limit) : null
       };
       return this.client.get(path, query, callback ? function(err, data) {
         if (err) {
