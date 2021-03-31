@@ -34,7 +34,6 @@
     "url": "https://github.com/SuperSaaS/supersaas-nodejs-api-client/issues"
   },
   "homepage": "https://supersaas.com",
-  "dependencies": {},
   "devDependencies": {
     "mocha": "^6.2.3"
   }
