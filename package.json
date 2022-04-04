@@ -35,6 +35,6 @@
   },
   "homepage": "https://supersaas.com",
   "devDependencies": {
-    "mocha": "^6.2.3"
+    "mocha": "^9.2.2"
   }
 }
