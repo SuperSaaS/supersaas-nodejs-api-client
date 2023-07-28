@@ -23,6 +23,7 @@
     this.forms = new Forms(this);
     this.schedules = new Schedules(this);
     this.users = new Users(this);
+    this.q = new Array(MAX_PER_WINDOW)
   }
   Client.API_VERSION = '1';
   Client.VERSION = '1.2.4';
@@ -43,7 +44,23 @@
     return this.request('DELETE', path, params, query, callback);
   }
 
+  const WINDOW_SIZE = 1000
+  const MAX_PER_WINDOW = 4
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  Client.prototype.throttle = async function(){
+    this.q.push(Date.now())
+    let previous_request = this.q.shift()
+    let d;
+    if(previous_request && (d = Date.now() - previous_request < WINDOW_SIZE )){
+      await sleep(WINDOW_SIZE - d);
+    }
+  }
+
   Client.prototype.request = function(httpMethod, path, params, query, callback) {
+    this.throttle();
     params = params || {};
     query = query || {};
     if (!this.accountName) {
