@@ -54,7 +54,7 @@
     this.q.push(Date.now())
     let previous_request = this.q.shift()
     let d;
-    if(previous_request && (d = Date.now() - previous_request < WINDOW_SIZE )){
+    if(previous_request && (d = Date.now() - previous_request) < WINDOW_SIZE ){
       await sleep(WINDOW_SIZE - d);
     }
   }
