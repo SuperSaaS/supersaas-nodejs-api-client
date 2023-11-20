@@ -1,3 +1,5 @@
+const { resolve } = require("path");
+
 (function() {
   const url = require("url");
   const http = require("http");
@@ -47,20 +49,25 @@
   const WINDOW_SIZE = 1000
   const MAX_PER_WINDOW = 4
   function sleep(ms) {
+    console.log("sleep", ms)
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   Client.prototype.throttle = async function(){
-    this.q.push(Date.now())
-    let previous_request = this.q.shift()
-    let d;
-    if(previous_request && (d = Date.now() - previous_request) < WINDOW_SIZE ){
-      await sleep(WINDOW_SIZE - d);
-    }
+    return new Promise( async resolve => {
+      this.q.push(Date.now())
+      let oldest_request = this.q.shift()
+      let d;
+      if (oldest_request && (d = Date.now() - oldest_request) < WINDOW_SIZE) {
+        await sleep(WINDOW_SIZE - d);
+      }
+      // Resolve the promise after the sleep delay or immediately if no throttling is needed
+      resolve()
+    })  
   }
-
-  Client.prototype.request = function(httpMethod, path, params, query, callback) {
-    this.throttle();
+ 
+  Client.prototype.request = async function(httpMethod, path, params, query, callback) {
+    await this.throttle();
     params = params || {};
     query = query || {};
     if (!this.accountName) {
