@@ -1,5 +1,3 @@
-const { resolve } = require("path");
-
 (function() {
   const url = require("url");
   const http = require("http");
