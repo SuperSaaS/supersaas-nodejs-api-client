@@ -49,7 +49,6 @@ const { resolve } = require("path");
   const WINDOW_SIZE = 1000
   const MAX_PER_WINDOW = 4
   function sleep(ms) {
-    console.log("sleep", ms)
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
@@ -57,9 +56,9 @@ const { resolve } = require("path");
     return new Promise( async resolve => {
       this.q.push(Date.now())
       let oldest_request = this.q.shift()
-      let d;
-      if (oldest_request && (d = Date.now() - oldest_request) < WINDOW_SIZE) {
-        await sleep(WINDOW_SIZE - d);
+      let remaining_time = Date.now() - oldest_request;
+      if (oldest_request && remaining_time < WINDOW_SIZE) {
+        await sleep(WINDOW_SIZE - remaining_time);
       }
       // Resolve the promise after the sleep delay or immediately if no throttling is needed
       resolve()
