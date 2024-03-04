@@ -1,0 +1,10 @@
+env:
+  browser: true
+  es2021: true
+extends: google
+parserOptions:
+  ecmaVersion: latest
+rules:
+  new-cap: off
+  max-len: 0
+  require-jsdoc: 0

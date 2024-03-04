@@ -1,46 +1,52 @@
 (function() {
-  var validation  = require("./validation");
-  var User = require("../models/User");
+  const validation = require('./validation');
+  const User = require('../models/User');
+  const FieldList = require('../models/FieldList');
 
   module.exports = (function() {
     function Users(client) {
       this.client = client;
     }
 
-    Users.prototype.list = function(form, limit, offset, callback) {
-      callback = validation.getCallbackFunctionArg(arguments)
-      var path = this._userPath();
-      var query = {
-        form: form && form !== callback ? true : null,
-        limit: limit && limit !== callback ? validation.validateNumber(limit) : null,
-        offset: offset && offset !== callback ? validation.validateNumber(offset) : null
-      }
-      return this.client.get(path, query, callback ? function(err, data) {
-        if (err) {
-          callback(err);
-        } else {
-          var res = data.map (function(attributes) { return new User(attributes); });
-          callback(null, res);
-        }
-      } : null);
-    }
+    Users.prototype.list = function(form = false, limit = null, offset = null) {
+      const path = this._userPath();
+      const query = {
+        form: form ? true : null,
+        limit: limit ? validation.validateNumber(limit) : null,
+        offset: offset ? validation.validateNumber(offset) : null,
+      };
 
-    Users.prototype.get = function(userId, callback) {
-      var path = this._userPath(userId);
-      return this.client.get(path, null, callback ? function(err, data) {
-        if (err) {
-          callback(err);
-        } else {
-          callback(null, new User(data));
-        }
-      } : null);
-    }
+      return new Promise((resolve, reject) => {
+        this.client.get(path, query, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            const users = data.map((attributes) => new User(attributes));
+            resolve(users);
+          }
+        });
+      });
+    };
 
-    Users.prototype.create = function(attributes, userId, webhook, callback) {
-      callback = validation.getCallbackFunctionArg(arguments)
-      var path = this._userPath(userId);
-      var query = {webhook: webhook && webhook !== callback ? 'true' : null};
-      var params = {
+    Users.prototype.get = function(userId) {
+      const path = this._userPath(userId);
+
+      return new Promise((resolve, reject) => {
+        this.client.get(path, null, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(new User(data));
+          }
+        });
+      });
+    };
+
+    Users.prototype.create = function(attributes, userId = null, webhook = false, duplicate = null) {
+      const path = this._userPath(userId);
+      const query = {webhook: webhook ? 'true' : null};
+      if (duplicate) query.duplicate = validation.validateDuplicate(duplicate);
+      const params = {
         user: {
           name: validation.validatePresent(attributes['name']),
           email: attributes['email'],
@@ -50,27 +56,31 @@
           mobile: attributes['mobile'],
           phone: attributes['phone'],
           country: attributes['country'],
+          timezone: attributes['timezone'],
           field_1: attributes['field_1'],
           field_2: attributes['field_2'],
           super_field: attributes['super_field'],
-          credit: attributes['credit'],
-          role: attributes['role']
-        }
-      }
-      return this.client.post(path, params, query, callback ? function(err, data) {
-        if (err) {
-          callback(err);
-        } else {
-          callback(null, {location: data});
-        }
-      } : null);
-    }
+        },
+      };
+      if (attributes['credit']) params.user.credit = validation.validateNumber(attributes['credit']);
+      if (attributes['role']) params.user.role = validation.validateOptions(attributes['role'], User.prototype.ROLES);
 
-    Users.prototype.update = function(userId, attributes, webhook, callback) {
-      callback = validation.getCallbackFunctionArg(arguments)
-      var path = this._userPath(userId);
-      var query = {webhook: webhook && webhook !== callback ? 'true' : null};
-      var params = {
+      return new Promise((resolve, reject) => {
+        this.client.post(path, params, query, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    };
+
+    Users.prototype.update = function(userId, attributes, webhook = null, notFound = null) {
+      const path = this._userPath(userId);
+      const query = {webhook: webhook ? 'true' : null};
+      if (notFound) query.notfound = validation.validateNotFound(notFound);
+      const params = {
         user: {
           name: attributes['name'],
           email: attributes['email'],
@@ -80,36 +90,69 @@
           mobile: attributes['mobile'],
           phone: attributes['phone'],
           country: attributes['country'],
+          timezone: attributes['timezone'],
           field_1: attributes['field_1'],
           field_2: attributes['field_2'],
           super_field: attributes['super_field'],
-          credit: attributes['credit'],
-          role: attributes['role']
+        },
+      };
+      if (attributes['credit']) params.user.credit = validation.validateNumber(attributes['credit']);
+      if (attributes['role']) params.user.role = validation.validateOptions(attributes['role'], User.prototype.ROLES);
+      Object.keys(params.user).forEach((key) => {
+        if (params.user[key] === null) {
+          delete params.user[key];
         }
-      }
-      return this.client.put(path, params, query, callback ? function(err, data) {
-        if (err) {
-          callback(err);
-        } else {
-          callback(null, new User(params.user));
-        }
-      } : null);
-    }
+      });
 
-    Users.prototype.delete = function(userId, callback) {
-      var path = this._userPath(userId);
-      return this.client.delete(path, null, null, callback);
-    }
+      return new Promise((resolve, reject) => {
+        this.client.put(path, params, query, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    };
 
-    Users.prototype._userPath = function(userId, callback) {
+    Users.prototype.delete = function(userId) {
+      const path = this._userPath(userId);
+      return new Promise((resolve, reject) => {
+        this.client.delete(path, null, null, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    };
+
+    Users.prototype.fieldList = function() {
+      const path = '/field_list';
+
+      return new Promise((resolve, reject) => {
+        this.client.get(path, null, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            const res = data.map(function(attributes) {
+              return new FieldList(attributes);
+            });
+            resolve(res);
+          }
+        });
+      });
+    };
+
+    Users.prototype._userPath = function(userId) {
       if (!userId || userId === '') {
-        return "/users";
+        return '/users';
       } else {
-        return "/users/" + userId;
+        return '/users/' + userId;
       }
-    }
+    };
 
     return Users;
   })();
-
 }).call(this);

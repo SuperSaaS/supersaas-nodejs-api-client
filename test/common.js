@@ -1,2 +1,2 @@
-var assert = require('assert');
-var SuperSaaS = require('../src/index');
+let assert = require('assert')
+let SuperSaaS = require('../src/index')
