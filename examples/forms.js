@@ -4,7 +4,7 @@ function setupClient(client) {
     client.accountName = 'YOUR_ACCOUNT';
     client.api_key = 'YOUR_API_KEY';
     client.verbose = false; //you can get more information by setting this to true
-    client.host = 'https://supersaas.com';
+    client.host = 'https://www.supersaas.com';
 }
 
 async function forms() {
