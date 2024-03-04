@@ -4,7 +4,7 @@ Online bookings/appointments/calendars in NodeJS using the SuperSaaS scheduling 
 
 The SuperSaaS API provides services that can be used to add online booking and scheduling functionality to an existing website or CRM software.
 
-NOTE: Versions 2+ uses promises instead of callbacks and thus use the old API client or update your code to use promises otherwise it will break.
+NOTE: Versions 2+ uses promises instead of callbacks and thus use the old API client or update your code using promises.
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ The `Client` can be used either (1) through the singleton `Instance` property, e
     
 Or else by (2) simply creating a new client instance manually, e.g.
     
-    var client = new Client({accountName: 'account', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'});
+    let client = new Client({accountName: 'account', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'});
 
 > Note, ensure that `configure` is called before `Instance`, otherwise the client will be initialized with configuration defaults.
 

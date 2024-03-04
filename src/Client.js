@@ -137,16 +137,10 @@
       if (contentType.includes('application/json')) {
         if (response.headers.get('Content-Length') > 0) {
           body = await response.json();
-          if (verboseLogging) {
-            console.log(body);
-          }
         }
       } else if (contentType.includes('text/plain')) {
         if (response.headers.get('Content-Length') > 0) {
           body = await response.text();
-          if (verboseLogging) {
-            console.log(body);
-          }
         }
       } else {
         console.log('Unsupported content type:', contentType);
@@ -158,9 +152,10 @@
           if (response.status === 201 && httpMethod === 'POST') {
             body = response.headers.get('location');
           }
-          console.log(response.status);
-          console.log(httpMethod);
-          console.log(body);
+          if (verboseLogging) {
+            console.log("httpMethod: ", httpMethod, ", status: ", response.status);
+            console.log(body);
+          }
           callback(null, body);
         } catch (error) {
           callback({errors: [{title: error.message}]}, null);

@@ -15,11 +15,10 @@ describe('Forms', function() {
       })
     })
 
-    it("gets list", function(done) {
+    it("gets list", async function() {
       let client = newClient()
       client.forms.list(12345, new Date(2010,1,1), null).then( (data) => {
         assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/forms.json?form_id=12345&from=2010-1-2%200%3A0%3A00')
-        done()
       })
     })
 

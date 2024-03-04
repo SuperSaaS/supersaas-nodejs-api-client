@@ -8,50 +8,50 @@ function newClient() {
 
 describe('Client', function() {
   it("initializes apis", function() {
-    var client = new Client({test: true})
+    let client = new Client({test: true})
     assert.equal(typeof client.appointments, 'object')
     assert.equal(typeof client.forms, 'object')
     assert.equal(typeof client.users, 'object')
   })
 
   it("performs request", function() {
-    var client = newClient()
+    let client = newClient()
     assert.ok(client.request('GET', '/test'))
   })
 
   it("performs get", function(done) {
-    var client = newClient()
-    var res = client.get('/test', {test: true}, function (err, data) {
+    let client = newClient()
+    let res = client.get('/test', {test: true}, function (err, data) {
       assert.equal(client.lastRequest.method, 'GET')
       assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/test.json?test=true')
       assert.equal(client.lastRequest.headers['Accept'], 'application/json')
       assert.equal(client.lastRequest.headers['Content-Type'], 'application/json')
 
-      auth = new Buffer.from(client.accountName + ':' + client.api_key).toString('base64')
+      let auth = new Buffer.from(client.accountName + ':' + client.api_key).toString('base64')
       assert.equal(client.lastRequest.headers['Authorization'], 'Basic ' + auth)
       done()
     })
   })
 
   it("performs post", function(done) {
-    var client = newClient()
-    var res = client.post('/test', {test: true}, null, function (err, data) {
+    let client = newClient()
+    let res = client.post('/test', {test: true}, null, function (err, data) {
       assert.equal(client.lastRequest.method, 'POST')
       done()
     })
   })
 
   it("performs put", function(done) {
-    var client = newClient()
-    var res = client.put('/test', {test: true}, {q: 1}, function (err, data) {
+    let client = newClient()
+    let res = client.put('/test', {test: true}, {q: 1}, function (err, data) {
       assert.equal(client.lastRequest.method, 'PUT')
       done()
     });
   })
 
   it("performs delete", function(done) {
-    var client = newClient()
-    var res = client.delete('/test', {test: true}, {}, function (err, data) {
+    let client = newClient()
+    let res = client.delete('/test', {test: true}, {}, function (err, data) {
       assert.equal(client.lastRequest.method, 'DELETE')
       done()
     });
