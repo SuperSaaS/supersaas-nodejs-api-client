@@ -446,9 +446,9 @@ Example:
 
 The ./examples folder contains npm executable scripts demonstrating how to use the API Client for common requests.
 
-The examples will require your account name and api key. These can be set as environment variables. e.g.
-
-    SSS_API_KEY=xxxxxxxxxxxxxxxxxxxxxx && SSS_API_ACCOUNT_NAME=myaccountname && npm run schedules
+The examples will require your account name and api key. These can be set in the example files. To run the examples use:
+    
+    node example.js
 
 ## Testing
 
@@ -467,6 +467,10 @@ The headers, body, path, etc. of the last request can be inspected for assertion
 For additional troubleshooting, the client can be configured with the `verbose` option, which will log any JSON contents in the request and response to the console, e.g.
 
     Client.Instance.verbose = true;
+
+To run the client tests, you will need to install `mocha`:
+
+    npx mocha
 
 ## Error Handling
 
