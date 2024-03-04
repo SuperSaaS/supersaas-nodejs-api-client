@@ -1,10 +1,10 @@
 (function() {
-  var Form = require("./Form");
+  const Form = require('./Form');
 
-  var User = function User(attributes) {
-    if (!attributes) return
+  const User = function User(attributes) {
+    if (!attributes) return;
 
-    for (var key in attributes) {
+    for (const key in attributes) {
       if (attributes.hasOwnProperty(key)) {
         if (key === 'form') {
           this[key] = new Form(attributes[key]);
@@ -15,6 +15,7 @@
     }
   };
 
-  module.exports = User;
+  User.prototype.ROLES = [3, 4, -1];
 
+  module.exports = User;
 }).call(this);

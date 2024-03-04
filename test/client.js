@@ -1,6 +1,6 @@
-var assert = require('assert');
-var SuperSaaS = require('../src/index');
-var Client = SuperSaaS.Client;
+let assert = require('assert');
+let SuperSaaS = require('../src/index');
+let Client = SuperSaaS.Client;
 
 function newClient() {
   return new Client({dryRun: true, accountName: 'Test', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'})
@@ -23,14 +23,14 @@ describe('Client', function() {
     var client = newClient()
     var res = client.get('/test', {test: true}, function (err, data) {
       assert.equal(client.lastRequest.method, 'GET')
-      assert.equal(client.lastRequest.path, '/api/test.json?test=true')
+      assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/test.json?test=true')
       assert.equal(client.lastRequest.headers['Accept'], 'application/json')
       assert.equal(client.lastRequest.headers['Content-Type'], 'application/json')
 
       auth = new Buffer.from(client.accountName + ':' + client.api_key).toString('base64')
       assert.equal(client.lastRequest.headers['Authorization'], 'Basic ' + auth)
       done()
-    });
+    })
   })
 
   it("performs post", function(done) {
@@ -38,7 +38,7 @@ describe('Client', function() {
     var res = client.post('/test', {test: true}, null, function (err, data) {
       assert.equal(client.lastRequest.method, 'POST')
       done()
-    });
+    })
   })
 
   it("performs put", function(done) {

@@ -1,6 +1,6 @@
-var assert = require('assert');
-var SuperSaaS = require('../src/index');
-var Client = SuperSaaS.Client;
+let assert = require('assert')
+let SuperSaaS = require('../src/index')
+let Client = SuperSaaS.Client
 
 function newClient() {
   return new Client({dryRun: true, accountName: 'Test', api_key: 'testing123'})
@@ -26,58 +26,66 @@ function userAttributes() {
 
 describe('Users', function() {
     it("gets one", function(done) {
-      var client = newClient();
-      client.users.get(12345, function(err, data) {
-        assert.equal(client.lastRequest.path, '/api/users/12345.json')
-        done()
+      let client = newClient()
+      client.users.get(12345).then( (data) => {
+          assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users/12345.json')
+          done()
       })
     })
 
     it("gets one by fk", function(done) {
-      var client = newClient();
-      client.users.get('12345fk', function(err, data) {
-        assert.equal(client.lastRequest.path, '/api/users/12345fk.json')
+      let client = newClient()
+      client.users.get('12345fk').then( (data) => {
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users/12345fk.json')
         done()
       })
     })
 
     it("gets list", function(done) {
-      var client = newClient();
-      client.users.list(true, 10, function(err, data) {
-        assert.equal(client.lastRequest.path, '/api/users.json?form=true&limit=10')
+      let client = newClient()
+      client.users.list(true, 10, 10).then( (data) => {
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users.json?form=true&limit=10&offset=10')
         done()
       })
     })
 
     it("creates user", function(done) {
-      var client = newClient();
-      client.users.create(userAttributes(), null, true, function(err, data) {
-        assert.equal(client.lastRequest.path, '/api/users.json?webhook=true')
+      let client = newClient()
+      client.users.create(userAttributes(), null, true, null).then( (data) => {
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users.json?webhook=true')
         done()
       })
     })
 
     it("creates user by fk", function(done) {
-      var client = newClient();
-      client.users.create(userAttributes(), '12345fk', function(err, data) {
-        assert.equal(client.lastRequest.path, '/api/users/12345fk.json')
+      let client = newClient()
+      client.users.create(userAttributes(), '12345fk', false, null).then( (data) => {
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users/12345fk.json')
         done()
       })
     })
 
     it("updates user", function(done) {
-      var client = newClient();
-      client.users.update(12345, userAttributes(), true, function(err, data) {
-        assert.equal(client.lastRequest.path, '/api/users/12345.json?webhook=true')
+      let client = newClient()
+      client.users.update(12345, userAttributes(), true, null).then( (data) => {
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users/12345.json?webhook=true')
         done()
       })
     })
 
     it("deletes user", function(done) {
-      var client = newClient();
-      client.users.delete(12345, function(err, data) {
-        assert.equal(client.lastRequest.path, '/api/users/12345.json')
+      let client = newClient()
+      client.users.delete(12345).then( (data) => {
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users/12345.json')
         done()
       })
     })
-});
+
+    it("lists user's fields", function(done) {
+        let client = newClient()
+        client.users.fieldList().then( (data) => {
+            assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/field_list.json')
+            done()
+        })
+    })
+})

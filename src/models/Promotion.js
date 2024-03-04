@@ -1,5 +1,5 @@
 (function() {
-  const Schedule = function Schedule(attributes) {
+  const Promotion = function Promotion(attributes) {
     if (!attributes) return;
 
     for (const key in attributes) {
@@ -9,5 +9,5 @@
     }
   };
 
-  module.exports = Schedule;
+  module.exports = Promotion;
 }).call(this);
