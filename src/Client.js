@@ -28,7 +28,7 @@
     this.q = new Array(MAX_PER_WINDOW);
   };
   Client.API_VERSION = '3';
-  Client.VERSION = '2.0.0';
+  Client.VERSION = '2.0.1';
 
   Client.prototype.get = function(path, query, callback) {
     return this.request('GET', path, null, query, callback);
@@ -47,22 +47,26 @@
   };
 
   const WINDOW_SIZE = 1000;
-  const MAX_PER_WINDOW = 4;
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
+  const MAX_PER_WINDOW = 1;
   Client.prototype.throttle = async function() {
-    return new Promise( async (resolve) => {
-      this.q.push(Date.now());
-      const oldestRequest = this.q.shift();
-      const remainingTime = Date.now() - oldestRequest;
-      if (oldestRequest && remainingTime < WINDOW_SIZE) {
-        await sleep(WINDOW_SIZE - remainingTime);
-      }
-      // Resolve the promise after the sleep or immediately if no throttling is needed
-      resolve();
-    });
+    const now = Date.now();
+
+    if (!this.lastRequestTime) {
+      this.lastRequestTime = now;
+      return Promise.resolve();
+    }
+
+    // Calculate elapsed time and ensure full window size wait
+    const elapsed = now - this.lastRequestTime;
+    const waitTime = Math.max(0, WINDOW_SIZE - elapsed);
+
+    if (waitTime > 0) {
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+
+    // Important: Update timestamp AFTER the wait to ensure full intervals
+    this.lastRequestTime = Date.now();
+    return Promise.resolve();
   };
 
   Client.prototype.request = async function(httpMethod, path, params, query, callback) {

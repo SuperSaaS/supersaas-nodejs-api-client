@@ -164,7 +164,7 @@ Example:
 
 #### Get User
 
-Get a single user by `userId` , and if the user does not exist 404 error will be raised:
+Get a single user by `userId` with optional `form`, and if the user does not exist 404 error will be raised:
 
 Definition:
 
@@ -193,6 +193,7 @@ Example:
 #### Delete User
 
 Delete a single user by `userId` , and if the user does not exist 404 error will be raised:
+If `webhook=true` is present it will trigger any webhooks connected to the account.
 
 Definition:
 
@@ -332,7 +333,8 @@ Example:
     
 #### Delete Appointment/Booking
 
-Delete a single appointment by `scheduleId` and `appointmentId`:
+Delete a single appointment by `scheduleId` and `appointmentId`.
+If `webhook=true` is present it will trigger any webhooks connected to the account.
 
 Definition:
 
@@ -346,7 +348,7 @@ Example:
 
 #### List Template Forms
 
-Get all forms by template `formId`, with `fromTime`, and `user` params ([see](https://www.supersaas.com/info/dev/form_api)):
+Get all forms by template `formId`, with `fromTime`, and `user` params ([see](https://www.supersaas.com/info/dev/form_api)) and `limit`/`offset` pagination params:
 
 Definition:
 

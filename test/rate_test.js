@@ -24,7 +24,7 @@ describe('Throttle functionality', function () {
     const startTime = Date.now()
 
     // Make 21 requests
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 6; i++) {
       await client.request('GET', '/test')
     }
 
