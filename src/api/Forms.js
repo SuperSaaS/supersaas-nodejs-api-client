@@ -8,7 +8,7 @@
       this.client = client;
     }
 
-    Forms.prototype.list = function(formId, fromTime = null, user = null) {
+    Forms.prototype.list = function(formId, fromTime = null, user = null, limit = null, offset = null) {
       const path = '/forms';
       const query = {form_id: validation.validateId(formId)};
 
@@ -18,6 +18,8 @@
       if (user !== null) {
         query.user = validation.validateUser(user);
       }
+      if (limit !== null) query.limit = validation.validateNumber(limit);
+      if (offset !== null) query.offset = validation.validateNumber(offset);
       return new Promise((resolve, reject) => {
         this.client.get(path, query, (err, data) => {
           if (err) {

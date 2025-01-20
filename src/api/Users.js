@@ -28,11 +28,14 @@
       });
     };
 
-    Users.prototype.get = function(userId) {
+    Users.prototype.get = function(userId, form = false) {
       const path = this._userPath(userId);
+      const query = {
+        form: form ? true : null
+      };
 
       return new Promise((resolve, reject) => {
-        this.client.get(path, null, (err, data) => {
+        this.client.get(path, query, (err, data) => {
           if (err) {
             reject(err);
           } else {
@@ -64,6 +67,7 @@
       };
       if (attributes['credit']) params.user.credit = validation.validateNumber(attributes['credit']);
       if (attributes['role']) params.user.role = validation.validateOptions(attributes['role'], User.prototype.ROLES);
+      if (attributes['group']) params.user.group = validation.validateNumber(attributes['group']);
 
       return new Promise((resolve, reject) => {
         this.client.post(path, params, query, (err, data) => {
@@ -115,10 +119,13 @@
       });
     };
 
-    Users.prototype.delete = function(userId) {
+    Users.prototype.delete = function(userId, webhook = false) {
       const path = this._userPath(userId);
+      const params = {
+        webhook: webhook ? 'true' : null,
+      };
       return new Promise((resolve, reject) => {
-        this.client.delete(path, null, null, (err, data) => {
+        this.client.delete(path, params, null, (err, data) => {
           if (err) {
             reject(err);
           } else {

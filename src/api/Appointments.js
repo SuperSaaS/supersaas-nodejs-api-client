@@ -37,10 +37,10 @@
       this.client = client;
     }
 
-    Appointments.prototype.agenda = function(scheduleId, userId, fromTime = null, slot = false) {
+    Appointments.prototype.agenda = function(scheduleId, user, fromTime = null, slot = false) {
       const path = '/agenda/' + validation.validateId(scheduleId);
       const query = {
-        user: userId,
+        user: user,
         from: fromTime ? validation.validateDatetime(fromTime) : null,
         slot: slot ? true : null,
       };
@@ -78,13 +78,14 @@
       });
     };
 
-    Appointments.prototype.list = function(scheduleId, form = null, startTime = null, limit = null) {
+    Appointments.prototype.list = function(scheduleId, form = null, startTime = null, limit = null, finish = null) {
       const path = '/bookings';
       const query = {
         schedule_id: validation.validateId(scheduleId),
         form: form ? true : null,
         start: startTime ? validation.validateDatetime(startTime) : null,
         limit: limit ? validation.validateNumber(limit) : null,
+        finish: finish ? validation.validateDatetime(finish) : null
       };
 
       return new Promise((resolve, reject) => {
@@ -124,7 +125,6 @@
         booking: {
           start: attributes['start'],
           finish: attributes['finish'],
-          name: attributes['name'],
           email: attributes['email'],
           full_name: attributes['full_name'],
           address: attributes['address'],
@@ -167,7 +167,6 @@
         booking: {
           start: attributes['start'],
           finish: attributes['finish'],
-          name: attributes['name'],
           email: attributes['email'],
           full_name: attributes['full_name'],
           address: attributes['address'],
@@ -201,12 +200,13 @@
       });
     };
 
-    Appointments.prototype.delete = function(scheduleId, appointmentId) {
-      const query = {schedule_id: validation.validateId(scheduleId)};
+    Appointments.prototype.delete = function(scheduleId, appointmentId, webhook = false) {
+      const query = { schedule_id: validation.validateId(scheduleId) };
+      const params = { webhook: webhook ? 'true' : null };
       const path = '/bookings/' + validation.validateId(appointmentId);
 
       return new Promise((resolve, reject) => {
-        this.client.delete(path, null, query, (err, data) => {
+        this.client.delete(path, params, query, (err, data) => {
           if (err) {
             reject(err);
           } else {
@@ -216,9 +216,9 @@
       });
     };
 
-    Appointments.prototype.range = function(scheduleId, today = false, fromTime = null, to = null, slot = false, user = null, resourceId = null, serviceId = null, limit = null, offset = null) {
+    Appointments.prototype.range = function(scheduleId, today = false, from = null, to = null, slot = false, user = null, resourceId = null, serviceId = null, limit = null, offset = null) {
       const path = '/range/' + validation.validateId(scheduleId);
-      const query = buildParam({}, fromTime, to, slot, user, limit, offset, resourceId, serviceId);
+      const query = buildParam({}, from, to, slot, user, limit, offset, resourceId, serviceId);
       if (today) query.today = true;
       return new Promise((resolve, reject) => {
         this.client.get(path, query, (err, data) => {
@@ -232,9 +232,9 @@
       });
     };
 
-    Appointments.prototype.changes = function(scheduleId, fromTime = null, to = null, slot = false, user = null, limit = null, offset = null) {
+    Appointments.prototype.changes = function(scheduleId, from = null, to = null, slot = false, user = null, limit = null, offset = null) {
       const path = '/changes/' + validation.validateId(scheduleId);
-      const query = buildParam({}, fromTime, to, slot, user, limit, offset, null, null);
+      const query = buildParam({}, from, to, slot, user, limit, offset, null, null);
       return new Promise((resolve, reject) => {
         this.client.get(path, query, (err, data) => {
           if (err) {
