@@ -28,7 +28,7 @@
     this.q = new Array(MAX_PER_WINDOW);
   };
   Client.API_VERSION = '3';
-  Client.VERSION = '2.0.1';
+  Client.VERSION = '2.0.2';
 
   Client.prototype.get = function(path, query, callback) {
     return this.request('GET', path, null, query, callback);
