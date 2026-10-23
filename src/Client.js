@@ -8,6 +8,7 @@
   const Users = require('./api/Users');
   const Promotions = require('./api/Promotions');
   const Groups = require('./api/Groups');
+  const Slots = require('./api/Slots');
 
   const DEFAULT_HOST = 'https://www.supersaas.com';
 
@@ -25,6 +26,7 @@
     this.users = new Users(this);
     this.groups = new Groups(this);
     this.promotions = new Promotions(this);
+    this.slots = new Slots(this);
     this.q = new Array(MAX_PER_WINDOW);
   };
   Client.API_VERSION = '3';

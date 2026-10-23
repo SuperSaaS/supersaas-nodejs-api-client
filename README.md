@@ -346,6 +346,76 @@ Example:
         console.log(data); //=> null
     });
 
+#### List Slots (capacity schedules)
+
+Slots are only available for capacity type schedules (other schedules return 405). Dates are `YYYY-MM-DD HH:MM:SS` strings or `Date` objects. A `capacity` of `'-'` or `null` means unlimited, `0` means no places.
+
+Get slots by `scheduleId`, with optional `startTime`/`finish` filters and `limit` (default 100, max 2500)/`offset` pagination:
+
+Definition:
+
+    Client.Instance.slots.list(scheduleId, startTime = null, finish = null, limit = null, offset = null)
+
+Example:
+
+    Client.Instance.slots.list(12345, '2030-01-01 00:00:00').then(data => {
+        console.log(data); //=> [Slot, ...]
+    });
+
+#### Get Slot
+
+Definition:
+
+    Client.Instance.slots.get(scheduleId, slotId)
+
+Example:
+
+    Client.Instance.slots.get(12345, 67890).then(data => {
+        console.log(data); //=> Slot
+    });
+
+#### Create Slot
+
+Create a slot with `start`, `finish`, `title`, `description`, `location`, `capacity`, `price` and `color` attributes. Resolves to the URL of the new slot:
+
+Definition:
+
+    Client.Instance.slots.create(scheduleId, attributes)
+
+Example:
+
+    Client.Instance.slots.create(12345, {start: '2030-01-02 10:00:00', finish: '2030-01-02 11:00:00', title: 'Yoga', capacity: 12}).then(data => {
+        console.log(data); //=> "https://www.supersaas.com/api/slots/67890.json"
+    });
+
+#### Update Slot
+
+Only the given attributes are changed:
+
+Definition:
+
+    Client.Instance.slots.update(scheduleId, slotId, attributes)
+
+Example:
+
+    Client.Instance.slots.update(12345, 67890, {title: 'Evening yoga', capacity: '-'}).then(data => {
+        console.log(data); //=> null
+    });
+
+#### Delete Slot
+
+Deletes the slot and any bookings on it.
+
+Definition:
+
+    Client.Instance.slots.delete(scheduleId, slotId)
+
+Example:
+
+    Client.Instance.slots.delete(12345, 67890).then(data => {
+        console.log(data); //=> null
+    });
+
 #### List Template Forms
 
 Get all forms by template `formId`, with `fromTime`, and `user` params ([see](https://www.supersaas.com/info/dev/form_api)) and `limit`/`offset` pagination params:
