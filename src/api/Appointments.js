@@ -33,7 +33,7 @@
       return params;
     }
 
-    // description is for resource schedules, quantity (number of places) for capacity schedules; form_id connects a form
+    // Input attributes only. description is for resource schedules, quantity (number of places) for capacity schedules
     function bookingParams(attributes) {
       return {
         start: attributes['start'],
@@ -53,7 +53,6 @@
         slot_id: attributes['slot_id'],
         description: attributes['description'],
         quantity: attributes['quantity'],
-        form_id: attributes['form_id'],
       };
     }
 
