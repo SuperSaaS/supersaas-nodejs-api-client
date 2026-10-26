@@ -125,6 +125,20 @@ Example
         console.log(data); //=> ["FieldList", ...]
     });
 
+#### List Input Fields of a Schedule
+
+Get the fields that can be set when creating a booking on a schedule by `scheduleId` (each has `name`, `type`, `label` and `required`):
+
+Definition:
+
+    Client.Instance.schedules.inputFieldList(scheduleId)
+
+Example
+
+    Client.Instance.schedules.inputFieldList(12345).then(data => {
+        console.log(data); //=> ["FieldList", ...]
+    });
+
 #### Create User
 
 Create a user with user attributes params.
@@ -219,6 +233,20 @@ Example:
         console.log(data); //=> [FieldList, ...]
     });
     
+#### List Input Fields of User object
+
+Get the user fields that can be set when creating a user.
+
+Definition:
+
+    Client.Instance.users.inputFieldList()
+
+Example:
+
+    Client.Instance.users.inputFieldList().then(data => {
+        console.log(data); //=> [FieldList, ...]
+    });
+
 #### Get Recent Changes
 
 Get recently changed appointments by `scheduleId`, with `from` time, `to` time, `user` user, `slot` view params (see [docs](https://www.supersaas.com/info/dev/appointment_api#recent_changes)),
@@ -348,9 +376,9 @@ Example:
 
 #### List Slots (capacity schedules)
 
-Slots are only available for capacity type schedules (other schedules return 405). Dates are `YYYY-MM-DD HH:MM:SS` strings or `Date` objects. A `capacity` of `'-'` or `null` means unlimited, `0` means no places.
+Slots are only available for capacity type schedules (other schedules return 405). Dates are `YYYY-MM-DD HH:MM:SS` strings or `Date` objects. A `capacity` of `'-'` means unlimited, `0` means no places.
 
-_Note: this client sends `capacity: null` to the API, which sets the slot to unlimited. The Ruby, Python and PHP clients leave `null` attributes out of the request instead, so there `null` leaves the capacity unchanged. Use `'-'` if you want the same result in every client._
+_Note: attributes that are `null` or `undefined` are not sent, so `capacity: null` leaves the capacity unchanged. Use `'-'` for unlimited._
 
 Get slots by `scheduleId`, with optional `startTime`/`finish` filters and `limit` (default 100, max 2500)/`offset` pagination:
 
@@ -565,6 +593,50 @@ Explanation of the error codes returned:
     501 Not yet implemented for service type schedule
     403 Unauthorized, check your credentials
     405 Not available for this schedule type (for example resources on a capacity schedule, or slots on a schedule that isn't capacity type)
+
+#### Ping
+
+Check that the account name and API key are valid. Resolves to `true`, and rejects with the usual error (status 401) otherwise.
+
+Definition:
+
+    Client.Instance.ping()
+
+Example:
+
+    Client.Instance.ping().then(ok => {
+        console.log(ok); //=> true
+    });
+
+#### Webhooks
+
+Create a webhook with a `targetUrl` that is called for an `event`: `U` user created, `M` user modified, `N` new appointment, `C` changed appointment, `R` reminder, `F` follow-up, `S` form submitted, `O` form changed, `H` mail, `P` credit purchase. `parentId` is the schedule id for `N`, `C`, `R` and `F`, and the super form id for `S` and `O`; for the other events it is required but ignored.
+
+Definition:
+
+    Client.Instance.hooks.create(targetUrl, event, parentId)
+    Client.Instance.hooks.delete(hookId, parentId)
+    Client.Instance.hooks.list()
+
+Example:
+
+    Client.Instance.hooks.create('https://www.example.com/hook', 'N', 12345).then(data => {
+        console.log(data); //=> {id: 123, parent_id: 12345}
+    });
+
+    Client.Instance.hooks.delete(123, 12345).then(data => {
+        console.log(data); //=> undefined
+    });
+
+#### Errors
+
+A failed request rejects with an `Error` whose message is `Request failed with status <status>`. The error also has a `status` (the HTTP status code) and `errors`, the array of errors the server returned (`[]` when the response has none):
+
+    Client.Instance.users.get(999999999).catch(err => {
+        console.log(err.message); //=> 'Request failed with status 404'
+        console.log(err.status); //=> 404
+        console.log(err.errors); //=> [{status: '404', title: 'Not found'}]
+    });
 
 ## Additional Information
 

@@ -5,6 +5,7 @@
       Appointments: require('./api/Appointments'),
       Forms: require('./api/Forms'),
       Groups: require('./api/Groups'),
+      Hooks: require('./api/Hooks'),
       Promotions: require('./api/Promotions'),
       Schedules: require('./api/Schedules'),
       Slots: require('./api/Slots'),

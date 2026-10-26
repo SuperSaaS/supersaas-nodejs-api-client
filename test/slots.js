@@ -58,10 +58,10 @@ describe('Slots', function() {
     assert.deepEqual(JSON.parse(client.lastRequest.body), {slot: {title: 'New', capacity: '-'}})
   })
 
-  it("keeps null capacity (unlimited)", async function() {
+  it("does not send null attributes", async function() {
     let client = newClient()
-    await client.slots.update(12345, 67890, {capacity: null})
-    assert.deepEqual(JSON.parse(client.lastRequest.body), {slot: {capacity: null}})
+    await client.slots.update(12345, 67890, {title: 'New', capacity: null, price: null, start: null})
+    assert.deepEqual(JSON.parse(client.lastRequest.body), {slot: {title: 'New'}})
   })
 
   it("deletes slot", async function() {
