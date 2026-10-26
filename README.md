@@ -289,6 +289,8 @@ Example:
         console.log(data); //=> 'https://www.supersaas.com/api/bookings/12345678.json'
     });
 
+Besides the user fields, the booking attributes include `description` (resource schedules), `service_id` (service schedules) and `quantity` (capacity schedules).
+
 #### Update Appointment/Booking
 
 Update an appointment by `scheduleId` and `appointmentId` with appointment attributes params, see the above link:

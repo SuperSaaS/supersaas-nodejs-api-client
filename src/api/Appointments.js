@@ -33,6 +33,30 @@
       return params;
     }
 
+    // description is for resource schedules, service_id for service schedules, quantity for capacity schedules
+    function bookingParams(attributes) {
+      return {
+        start: attributes['start'],
+        finish: attributes['finish'],
+        email: attributes['email'],
+        full_name: attributes['full_name'],
+        address: attributes['address'],
+        mobile: attributes['mobile'],
+        phone: attributes['phone'],
+        country: attributes['country'],
+        field_1: attributes['field_1'],
+        field_2: attributes['field_2'],
+        field_1_r: attributes['field_1_r'],
+        field_2_r: attributes['field_2_r'],
+        super_field: attributes['super_field'],
+        resource_id: attributes['resource_id'],
+        slot_id: attributes['slot_id'],
+        description: attributes['description'],
+        service_id: attributes['service_id'],
+        quantity: attributes['quantity'],
+      };
+    }
+
     function Appointments(client) {
       this.client = client;
     }
@@ -122,23 +146,7 @@
         webhook: webhook ? 'true' : null,
         form: form ? true : null,
         user_id: validation.validateId(userId),
-        booking: {
-          start: attributes['start'],
-          finish: attributes['finish'],
-          email: attributes['email'],
-          full_name: attributes['full_name'],
-          address: attributes['address'],
-          mobile: attributes['mobile'],
-          phone: attributes['phone'],
-          country: attributes['country'],
-          field_1: attributes['field_1'],
-          field_2: attributes['field_2'],
-          field_1_r: attributes['field_1_r'],
-          field_2_r: attributes['field_2_r'],
-          super_field: attributes['super_field'],
-          resource_id: attributes['resource_id'],
-          slot_id: attributes['slot_id'],
-        },
+        booking: bookingParams(attributes),
       };
 
       Object.keys(params.booking).forEach((key) => {
@@ -164,23 +172,7 @@
       const params = {
         schedule_id: validation.validateId(scheduleId),
         form: form ? true : null,
-        booking: {
-          start: attributes['start'],
-          finish: attributes['finish'],
-          email: attributes['email'],
-          full_name: attributes['full_name'],
-          address: attributes['address'],
-          mobile: attributes['mobile'],
-          phone: attributes['phone'],
-          country: attributes['country'],
-          field_1: attributes['field_1'],
-          field_2: attributes['field_2'],
-          field_1_r: attributes['field_1_r'],
-          field_2_r: attributes['field_2_r'],
-          super_field: attributes['super_field'],
-          resource_id: attributes['resource_id'],
-          slot_id: attributes['slot_id'],
-        },
+        booking: bookingParams(attributes),
       };
 
       Object.keys(params.booking).forEach((key) => {
