@@ -350,6 +350,8 @@ Example:
 
 Slots are only available for capacity type schedules (other schedules return 405). Dates are `YYYY-MM-DD HH:MM:SS` strings or `Date` objects. A `capacity` of `'-'` or `null` means unlimited, `0` means no places.
 
+_Note: this client sends `capacity: null` to the API, which sets the slot to unlimited. The Ruby, Python and PHP clients leave `null` attributes out of the request instead, so there `null` leaves the capacity unchanged. Use `'-'` if you want the same result in every client._
+
 Get slots by `scheduleId`, with optional `startTime`/`finish` filters and `limit` (default 100, max 2500)/`offset` pagination:
 
 Definition:
@@ -562,7 +564,7 @@ Explanation of the error codes returned:
     404 HTTP Request Error: Not Found (non existent user id for example)
     501 Not yet implemented for service type schedule
     403 Unauthorized, check your credentials
-    405 Not available for capacity type schedule
+    405 Not available for this schedule type (for example resources on a capacity schedule, or slots on a schedule that isn't capacity type)
 
 ## Additional Information
 

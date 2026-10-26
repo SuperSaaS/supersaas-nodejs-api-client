@@ -76,5 +76,8 @@ describe('Slots', function() {
     assert.throws(() => client.slots.get('abc', 1))
     assert.throws(() => client.slots.get(1, 'abc'))
     assert.throws(() => client.slots.create(1, {start: 'tomorrow'}))
+    // falsy but not null, so still validated
+    assert.throws(() => client.slots.create(1, {start: ''}))
+    assert.throws(() => client.slots.update(1, 2, {finish: 0}))
   })
 })

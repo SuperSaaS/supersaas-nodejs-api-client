@@ -6,14 +6,15 @@
     const SLOT_ATTRIBUTES = ['start', 'finish', 'title', 'description', 'location', 'capacity', 'price', 'color'];
 
     // Only attributes that are present are sent, so `capacity: null` (or '-') explicitly means unlimited.
-    function slotParams(scheduleId, attributes) {
+    // The Ruby, Python and PHP clients drop null attributes instead; see the README.
+    function slotParams(attributes) {
       attributes = attributes || {};
       const slot = {};
       SLOT_ATTRIBUTES.forEach((key) => {
         if (attributes.hasOwnProperty(key) && attributes[key] !== undefined) slot[key] = attributes[key];
       });
-      if (slot.start) slot.start = validation.validateDatetime(slot.start);
-      if (slot.finish) slot.finish = validation.validateDatetime(slot.finish);
+      if (slot.start != null) slot.start = validation.validateDatetime(slot.start);
+      if (slot.finish != null) slot.finish = validation.validateDatetime(slot.finish);
       return {slot: slot};
     }
 
@@ -60,7 +61,7 @@
     Slots.prototype.create = function(scheduleId, attributes) {
       const path = '/slots';
       const query = {schedule_id: validation.validateId(scheduleId)};
-      const params = slotParams(scheduleId, attributes);
+      const params = slotParams(attributes);
 
       return new Promise((resolve, reject) => {
         this.client.post(path, params, query, (err, data) => {
@@ -76,7 +77,7 @@
     Slots.prototype.update = function(scheduleId, slotId, attributes) {
       const path = '/slots/' + validation.validateId(slotId);
       const query = {schedule_id: validation.validateId(scheduleId)};
-      const params = slotParams(scheduleId, attributes);
+      const params = slotParams(attributes);
 
       return new Promise((resolve, reject) => {
         this.client.put(path, params, query, (err, data) => {
