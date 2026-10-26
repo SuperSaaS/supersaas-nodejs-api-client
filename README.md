@@ -289,7 +289,7 @@ Example:
         console.log(data); //=> 'https://www.supersaas.com/api/bookings/12345678.json'
     });
 
-Besides the user fields, the booking attributes include `description` (resource schedules), `service_id` (service schedules) and `quantity` (capacity schedules).
+These booking attributes are sent: `start`, `finish`, `full_name`, `email`, `address`, `mobile`, `phone`, `country`, `field_1`, `field_2`, `field_1_r`, `field_2_r`, `super_field` and `description`, `form_id` to connect an existing form, and what is booked: `resource_id` on a resource schedule, or `slot_id` and `quantity` (number of places) on a capacity schedule. These are the attributes the API accepts; others are not sent. The API does not support creating bookings on service schedules.
 
 #### Update Appointment/Booking
 
