@@ -49,17 +49,17 @@ describe('Appointments', function() {
         })
     })
 
-    it("sends description and quantity but not the read-only form_id on create", async function() {
+    it("sends description, quantity and form_id on create", async function() {
       const client = newClient()
       await client.appointments.create(12345, 67890, {start: '2026-11-02 10:00:00', description: 'Court 2', quantity: 3, form_id: 7})
       assert.deepStrictEqual(JSON.parse(client.lastRequest.body).booking,
-        {start: '2026-11-02 10:00:00', description: 'Court 2', quantity: 3})
+        {start: '2026-11-02 10:00:00', description: 'Court 2', quantity: 3, form_id: 7})
     });
 
-    it("sends description and quantity but not the read-only form_id on update", async function() {
+    it("sends description, quantity and form_id on update", async function() {
       const client = newClient()
       await client.appointments.update(12345, 67890, {description: 'Court 2', quantity: 3, form_id: 7})
-      assert.deepStrictEqual(JSON.parse(client.lastRequest.body).booking, {description: 'Court 2', quantity: 3})
+      assert.deepStrictEqual(JSON.parse(client.lastRequest.body).booking, {description: 'Court 2', quantity: 3, form_id: 7})
     });
 
     it("creates appointment", async function() {
