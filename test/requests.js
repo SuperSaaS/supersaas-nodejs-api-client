@@ -5,6 +5,22 @@ function newClient() {
   return new Client({dryRun: true, accountName: 'Test', api_key: 'testing123'});
 }
 
+describe('Request building', function() {
+  it('sends the appointment delete webhook in the query string', async function() {
+    const client = newClient();
+    await client.appointments.delete(12345, 67890, true);
+    assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/bookings/67890.json?schedule_id=12345&webhook=true');
+    assert.strictEqual(client.lastRequest.body, undefined);
+  });
+
+  it('sends the user delete webhook in the query string', async function() {
+    const client = newClient();
+    await client.users.delete(12345, true);
+    assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/users/12345.json?webhook=true');
+    assert.strictEqual(client.lastRequest.body, undefined);
+  });
+});
+
 describe('Verbose logging', function() {
   const realFetch = global.fetch;
   const realLog = console.log;

@@ -196,12 +196,14 @@
     };
 
     Appointments.prototype.delete = function(scheduleId, appointmentId, webhook = false) {
-      const query = {schedule_id: validation.validateId(scheduleId)};
-      const params = {webhook: webhook ? 'true' : null};
+      const query = {
+        schedule_id: validation.validateId(scheduleId),
+        webhook: webhook ? 'true' : null,
+      };
       const path = '/bookings/' + validation.validateId(appointmentId);
 
       return new Promise((resolve, reject) => {
-        this.client.delete(path, params, query, (err, data) => {
+        this.client.delete(path, null, query, (err, data) => {
           if (err) {
             reject(err);
           } else {
