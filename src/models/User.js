@@ -1,18 +1,9 @@
 (function() {
+  const assignAttributes = require('./assignAttributes');
   const Form = require('./Form');
 
   const User = function User(attributes) {
-    if (!attributes) return;
-
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        if (key === 'form') {
-          this[key] = new Form(attributes[key]);
-        } else {
-          this[key] = attributes[key];
-        }
-      }
-    }
+    assignAttributes(this, attributes, (key, value) => key === 'form' ? new Form(value) : value);
   };
 
   User.prototype.ROLES = [3, 4, -1];

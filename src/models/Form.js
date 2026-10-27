@@ -1,12 +1,8 @@
 (function() {
-  const Form = function Form(attributes) {
-    if (!attributes) return;
+  const assignAttributes = require('./assignAttributes');
 
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        this[key] = attributes[key];
-      }
-    }
+  const Form = function Form(attributes) {
+    assignAttributes(this, attributes);
   };
 
   module.exports = Form;

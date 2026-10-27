@@ -1,12 +1,8 @@
 (function() {
-  const FieldList = function FieldList(attributes) {
-    if (!attributes) return;
+  const assignAttributes = require('./assignAttributes');
 
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        this[key] = attributes[key];
-      }
-    }
+  const FieldList = function FieldList(attributes) {
+    assignAttributes(this, attributes);
   };
 
   module.exports = FieldList;

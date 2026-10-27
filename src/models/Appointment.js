@@ -1,19 +1,12 @@
 (function() {
+  const assignAttributes = require('./assignAttributes');
   const Form = require('./Form');
   const Appointment = function(attributes) {
-    if (!attributes) return;
-
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        if (key === 'slot') {
-          this[key] = new Slot(attributes[key]);
-        } else if (key === 'form') {
-          this[key] = new Form(attributes[key]);
-        } else {
-          this[key] = attributes[key];
-        }
-      }
-    }
+    assignAttributes(this, attributes, (key, value) => {
+      if (key === 'slot') return new Slot(value);
+      if (key === 'form') return new Form(value);
+      return value;
+    });
   };
 
   const Slot = function(attributes) {

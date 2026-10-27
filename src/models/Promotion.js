@@ -1,12 +1,8 @@
 (function() {
-  const Promotion = function Promotion(attributes) {
-    if (!attributes) return;
+  const assignAttributes = require('./assignAttributes');
 
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        this[key] = attributes[key];
-      }
-    }
+  const Promotion = function Promotion(attributes) {
+    assignAttributes(this, attributes);
   };
 
   module.exports = Promotion;

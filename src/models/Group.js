@@ -1,12 +1,8 @@
 (function() {
-  const Group = function Group(attributes) {
-    if (!attributes) return;
+  const assignAttributes = require('./assignAttributes');
 
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        this[key] = attributes[key];
-      }
-    }
+  const Group = function Group(attributes) {
+    assignAttributes(this, attributes);
   };
 
   module.exports = Group;
