@@ -85,7 +85,7 @@
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'User-Agent': this._userAgent(),
-        'Authorization': 'Basic ' + new Buffer.from(this.accountName + ':' + this.api_key).toString('base64'),
+        'Authorization': 'Basic ' + Buffer.from(this.accountName + ':' + this.api_key).toString('base64'),
       };
 
       if (!['GET', 'POST', 'PUT', 'DELETE'].includes(httpMethod)) {
@@ -147,7 +147,6 @@
           body = await response.text();
         }
       } else {
-        console.log('Unsupported content type:', contentType);
         throw new Error(`Unsupported content type: ${contentType}`);
       }
 
@@ -171,7 +170,9 @@
         return body;
       }
     } catch (error) {
-      console.log(error);
+      if (this.verbose) {
+        console.log(error);
+      }
       if (callback) {
         callback(error, null);
       } else {
