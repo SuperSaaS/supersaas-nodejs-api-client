@@ -21,13 +21,13 @@ describe('Client', function() {
 
   it("performs get", function(done) {
     let client = newClient()
-    let res = client.get('/test', {test: true}, function (err, data) {
+    client.get('/test', {test: true}, function (err, data) {
       assert.equal(client.lastRequest.method, 'GET')
       assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/test.json?test=true')
       assert.equal(client.lastRequest.headers['Accept'], 'application/json')
       assert.equal(client.lastRequest.headers['Content-Type'], 'application/json')
 
-      let auth = new Buffer.from(client.accountName + ':' + client.api_key).toString('base64')
+      let auth = Buffer.from(client.accountName + ':' + client.api_key).toString('base64')
       assert.equal(client.lastRequest.headers['Authorization'], 'Basic ' + auth)
       done()
     })
@@ -35,7 +35,7 @@ describe('Client', function() {
 
   it("performs post", function(done) {
     let client = newClient()
-    let res = client.post('/test', {test: true}, null, function (err, data) {
+    client.post('/test', {test: true}, null, function (err, data) {
       assert.equal(client.lastRequest.method, 'POST')
       done()
     })
@@ -43,7 +43,7 @@ describe('Client', function() {
 
   it("performs put", function(done) {
     let client = newClient()
-    let res = client.put('/test', {test: true}, {q: 1}, function (err, data) {
+    client.put('/test', {test: true}, {q: 1}, function (err, data) {
       assert.equal(client.lastRequest.method, 'PUT')
       done()
     });
@@ -51,7 +51,7 @@ describe('Client', function() {
 
   it("performs delete", function(done) {
     let client = newClient()
-    let res = client.delete('/test', {test: true}, {}, function (err, data) {
+    client.delete('/test', {test: true}, {}, function (err, data) {
       assert.equal(client.lastRequest.method, 'DELETE')
       done()
     });
