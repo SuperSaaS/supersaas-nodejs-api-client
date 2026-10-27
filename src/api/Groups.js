@@ -14,7 +14,7 @@
           if (err) {
             reject(err);
           } else {
-            resolve(new Group(data));
+            resolve(data.map((attributes) => new Group(attributes)));
           }
         });
       });

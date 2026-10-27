@@ -45,8 +45,7 @@
           if (err) {
             reject(err);
           } else {
-            const res = mapSlotsOrBookings(data);
-            resolve(new Appointment.appointment(res));
+            resolve(mapSlotsOrBookings(data));
           }
         });
       });

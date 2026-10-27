@@ -41,6 +41,28 @@ describe('Response handling', function() {
     assert.ok(result[0] instanceof Models.Appointment.appointment);
   });
 
+  it('maps groups to an array of Group models', async function() {
+    respond(200, [{id: 1, name: 'a'}, {id: 2, name: 'b'}]);
+    const result = await liveClient().groups.list();
+    assert.ok(Array.isArray(result));
+    assert.ok(result[0] instanceof Models.Group);
+    assert.equal(result[1].name, 'b');
+  });
+
+  it('maps an agenda to an array of appointments', async function() {
+    respond(200, {bookings: [{id: 1}, {id: 2}]});
+    const result = await liveClient().appointments.agenda(12345, 67890);
+    assert.ok(Array.isArray(result));
+    assert.ok(result[0] instanceof Models.Appointment.appointment);
+    assert.deepEqual(Object.keys(result), ['0', '1']);
+  });
+
+  it('maps an agenda with slots to an array of slots', async function() {
+    respond(200, {slots: [{id: 1, bookings: []}]});
+    const result = await liveClient().appointments.agenda(12345, 67890, null, true);
+    assert.ok(result[0] instanceof Models.Appointment.slot);
+  });
+
   it('rejects with the status in the message', async function() {
     respond(404, {errors: [{title: 'Not found'}]});
     await assert.rejects(liveClient().schedules.list(), {message: 'Request failed with status 404'});
