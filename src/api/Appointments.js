@@ -85,7 +85,7 @@
         form: form ? true : null,
         start: startTime ? validation.validateDatetime(startTime) : null,
         limit: limit ? validation.validateNumber(limit) : null,
-        finish: finish ? validation.validateDatetime(finish) : null
+        finish: finish ? validation.validateDatetime(finish) : null,
       };
 
       return new Promise((resolve, reject) => {
@@ -201,8 +201,8 @@
     };
 
     Appointments.prototype.delete = function(scheduleId, appointmentId, webhook = false) {
-      const query = { schedule_id: validation.validateId(scheduleId) };
-      const params = { webhook: webhook ? 'true' : null };
+      const query = {schedule_id: validation.validateId(scheduleId)};
+      const params = {webhook: webhook ? 'true' : null};
       const path = '/bookings/' + validation.validateId(appointmentId);
 
       return new Promise((resolve, reject) => {

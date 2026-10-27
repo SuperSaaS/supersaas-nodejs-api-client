@@ -61,7 +61,7 @@
     const waitTime = Math.max(0, WINDOW_SIZE - elapsed);
 
     if (waitTime > 0) {
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
     }
 
     // Important: Update timestamp AFTER the wait to ensure full intervals
@@ -157,7 +157,7 @@
             body = response.headers.get('location');
           }
           if (verboseLogging) {
-            console.log("httpMethod: ", httpMethod, ", status: ", response.status);
+            console.log('httpMethod: ', httpMethod, ', status: ', response.status);
             console.log(body);
           }
           callback(null, body);

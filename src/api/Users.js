@@ -31,7 +31,7 @@
     Users.prototype.get = function(userId, form = false) {
       const path = this._userPath(userId);
       const query = {
-        form: form ? true : null
+        form: form ? true : null,
       };
 
       return new Promise((resolve, reject) => {
