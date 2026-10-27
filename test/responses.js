@@ -63,6 +63,20 @@ describe('Response handling', function() {
     assert.ok(result[0] instanceof Models.Appointment.slot);
   });
 
+  it('parses a JSON body sent without Content-Length', async function() {
+    global.fetch = async () => new Response(JSON.stringify([{id: 7}]), {
+      status: 200,
+      headers: {'Content-Type': 'application/json'},
+    });
+    const result = await liveClient().schedules.list();
+    assert.equal(result[0].id, 7);
+  });
+
+  it('keeps an empty body without Content-Length undefined', async function() {
+    global.fetch = async () => new Response('', {status: 200, headers: {'Content-Type': 'application/json'}});
+    assert.strictEqual(await liveClient().get('/anything'), undefined);
+  });
+
   it('rejects with the status in the message', async function() {
     respond(404, {errors: [{title: 'Not found'}]});
     await assert.rejects(liveClient().schedules.list(), {message: 'Request failed with status 404'});

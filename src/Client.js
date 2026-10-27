@@ -126,7 +126,7 @@
       if (verboseLogging) {
         console.log(requestBody);
       }
-      const response = await fetch(requestBody.path, requestBody);
+      const response = await this._withContentLength(await fetch(requestBody.path, requestBody));
 
       if (!response.ok) {
         if (verboseLogging) {
@@ -195,6 +195,16 @@
       }
     });
     return parsed;
+  };
+  // Chunked or compressed responses have no Content-Length. Buffer the body and set it, so the parsing below sees the real size.
+  Client.prototype._withContentLength = async function(response) {
+    if (response.headers.has('Content-Length')) {
+      return response;
+    }
+    const body = Buffer.from(await response.arrayBuffer());
+    const headers = new Headers(response.headers);
+    headers.set('Content-Length', String(body.length));
+    return new Response(body.length > 0 ? body : null, {status: response.status, statusText: response.statusText, headers: headers});
   };
 
   const config = {
