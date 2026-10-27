@@ -9,13 +9,9 @@
       } else if (Array.isArray(obj)) {
         return obj.map((attributes) => new Appointment.appointment(attributes));
       } else if (obj['slots']) {
-        return (obj['slots'] || []).map(function(attributes) {
-          return new Appointment.slot(attributes);
-        });
+        return obj['slots'].map((attributes) => new Appointment.slot(attributes));
       } else if (obj['bookings']) {
-        return (obj['bookings'] || obj || []).map(function(attributes) {
-          return new Appointment.appointment(attributes);
-        });
+        return obj['bookings'].map((attributes) => new Appointment.appointment(attributes));
       } else {
         return [];
       }
