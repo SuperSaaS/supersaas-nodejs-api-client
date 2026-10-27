@@ -63,3 +63,23 @@ describe('Verbose logging', function() {
   });
 });
 
+describe('Client.configure', function() {
+  const original = {dryRun: Client.Instance.dryRun, verbose: Client.Instance.verbose};
+  afterEach(function() {
+    Object.assign(Client.Instance, original);
+  });
+
+  it('switches dryRun and verbose off again', function() {
+    Client.configure({dryRun: true, verbose: true});
+    assert.strictEqual(Client.Instance.dryRun, true);
+    Client.configure({dryRun: false, verbose: false});
+    assert.strictEqual(Client.Instance.dryRun, false);
+    assert.strictEqual(Client.Instance.verbose, false);
+  });
+
+  it('leaves keys that are not passed unchanged', function() {
+    const accountName = Client.Instance.accountName;
+    Client.configure({verbose: false});
+    assert.strictEqual(Client.Instance.accountName, accountName);
+  });
+});

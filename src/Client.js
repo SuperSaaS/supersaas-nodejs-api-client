@@ -217,7 +217,7 @@
   Client.Instance = new Client(config);
   Client.configure = function(configuration) {
     for (const key in config) {
-      if (configuration[key]) {
+      if (configuration[key] !== undefined && configuration[key] !== null) {
         Client.Instance[key] = configuration[key];
       }
     }
