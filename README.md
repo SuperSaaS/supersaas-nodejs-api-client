@@ -472,7 +472,7 @@ For additional troubleshooting, the client can be configured with the `verbose` 
 
     Client.Instance.verbose = true;
 
-Verbose output includes the request headers, among them the `Authorization` header with your encoded API key, so don't leave it on in production logs.
+Verbose output includes the request URL, headers and body, and the response body. The `Authorization` header is shown as `[REDACTED]`, but URLs and bodies can contain personal data such as names and email addresses, so don't leave it on in production logs.
 
 To run the client's own tests and linter:
 

@@ -124,13 +124,13 @@
 
       const verboseLogging = this.verbose;
       if (verboseLogging) {
-        console.log(requestBody);
+        console.log({...requestBody, headers: {...headers, Authorization: '[REDACTED]'}});
       }
       const response = await this._withContentLength(await fetch(requestBody.path, requestBody));
 
       if (!response.ok) {
         if (verboseLogging) {
-          console.error(`Failed request ${response.status}, ${response.body}`);
+          console.error(`Failed request ${response.status}, ${response.statusText}`);
         }
         throw new Error(`Request failed with status ${response.status}`);
       }
