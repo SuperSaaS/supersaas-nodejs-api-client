@@ -4,7 +4,7 @@ Online bookings/appointments/calendars in NodeJS using the SuperSaaS scheduling 
 
 The SuperSaaS API provides services that can be used to add online booking and scheduling functionality to an existing website or CRM software.
 
-NOTE: Versions 2+ uses promises instead of callbacks and thus use the old API client or update your code using promises.
+NOTE: Version 2 and later return promises instead of taking callbacks. Code written for version 1 either keeps using version 1 or needs to be updated to use promises.
 
 ## Prerequisites
 
@@ -15,11 +15,11 @@ NOTE: Versions 2+ uses promises instead of callbacks and thus use the old API cl
 
 NodeJS 20.11.1 or greater.
 
-No external packages. Only the native `http`/`https` modules are used.
+No runtime dependencies. Requests are made with the `fetch` API built into NodeJS.
 
 ## Installation
 
-The SuperSaaS NodeJS API Client is available as a module from the NPM Registry and can be included in your project package. Note, the supersaas-api-client may update major versions with breaking changes, so it's recommended to use a major version when expressing the gem dependency. e.g.
+The SuperSaaS NodeJS API Client is available as a module from the NPM Registry and can be included in your project package. Note, the supersaas-api-client may update major versions with breaking changes, so it's recommended to pin the major version when declaring the dependency, e.g.
 
     {
         "dependencies": {
@@ -51,14 +51,14 @@ Or else by (2) simply creating a new client instance manually, e.g.
     
     let client = new Client({accountName: 'account', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'});
 
-> Note, ensure that `configure` is called before `Instance`, otherwise the client will be initialized with configuration defaults.
+> Note, `Client.Instance` is created when the module is loaded, using the defaults below. `configure` updates that instance, so call it before making requests through `Instance`.
 
-If the client isn't configured explicitly, it will use default `ENV` variables for the account name, api key, and user name.
+If the client isn't configured explicitly, it will use default `ENV` variables for the account name and api key.
 
     process.env.SSS_API_ACCOUNT_NAME = 'your-env-supersaas-account-name';
     process.env.SSS_API_KEY = 'your-supersaas-account-api-key';
     SuperSaaS.Client.Instance.accountName; //=> 'your-env-supersaas-account-name';
-    SuperSaaS.Client.Instance.api_key; //=> 'your-env-supersaas-account-name';
+    SuperSaaS.Client.Instance.api_key; //=> 'your-supersaas-account-api-key';
     
 All configuration options can be individually set on the client.
 
@@ -117,7 +117,7 @@ Get all the available fields of a schedule by `scheduleId`:
 
 Definition:
 
-    Client.Instance.schedules.resources(scheduleId)
+    Client.Instance.schedules.fieldList(scheduleId)
 
 Example
 
@@ -154,7 +154,7 @@ You only need to specify the attributes you wish to update:
 
 Definition:
 
-    Client.Instance.users.update((userId, attributes, webhook = null, notFound = null))
+    Client.Instance.users.update(userId, attributes, webhook = null, notFound = null)
     
 Example:
 
@@ -168,7 +168,7 @@ Get a single user by `userId` with optional `form`, and if the user does not exi
 
 Definition:
 
-    Client.Instance.users.get(userId)
+    Client.Instance.users.get(userId, form = false)
     
 Example:
 
@@ -182,7 +182,7 @@ Get all users with optional `form` and `limit`/`offset` pagination params:
 
 Definition:
 
-    Client.Instance.users.list(form = null, limit = null, offset = null)
+    Client.Instance.users.list(form = false, limit = null, offset = null)
     
 Example:
 
@@ -192,12 +192,12 @@ Example:
 
 #### Delete User
 
-Delete a single user by `userId` , and if the user does not exist 404 error will be raised:
+Delete a single user by `userId`, and if the user does not exist 404 error will be raised:
 If `webhook=true` is present it will trigger any webhooks connected to the account.
 
 Definition:
 
-    Client.Instance.users.delete(userId)
+    Client.Instance.users.delete(userId, webhook = false)
     
 Example:
 
@@ -215,7 +215,7 @@ Definition:
 
 Example:
 
-    Client.instance.users.fieldList().then(data => {
+    Client.Instance.users.fieldList().then(data => {
         console.log(data); //=> [FieldList, ...]
     });
     
@@ -235,7 +235,7 @@ Example:
     
 #### Get list of appointments
 
-Get recently changed appointments by `scheduleId`, with `fromTime` time, `to` time, `user` user, `slot` view params (for more options see [docs](https://www.supersaas.com/info/dev/appointment_api#recent_changes)),
+Get the appointments in a time range by `scheduleId`, with `today`, `fromTime` time, `to` time, `slot` view, `user`, `resourceId`, `serviceId` and `limit`/`offset` pagination params (see [docs](https://www.supersaas.com/info/dev/appointment_api)):
 
 Definition:
 
@@ -243,7 +243,7 @@ Definition:
     
 Example:
 
-    Client.Instance.appointments.range(12345, false, '2018-01-31 00:00:00', '2018-02-31 00:00:00', true).then(data => { 
+    Client.Instance.appointments.range(12345, false, '2018-01-31 00:00:00', '2018-02-28 00:00:00', true).then(data => { 
         console.log(data); //=> ["Appointment", ...]
     });
 
@@ -253,11 +253,11 @@ Get agenda (upcoming) appointments of a single user by `scheduleId` and `userId`
 
 Definition:
 
-    Client.Instance.appointments.agenda(scheduleId, userId, fromTime, slot, callback)
+    Client.Instance.appointments.agenda(scheduleId, userId, fromTime = null, slot = false)
     
 Example:
 
-    Client.Instance.appointments.agenda(12345, 54321, '2019-01-31 00:00:00', true, function(err, data) { 
+    Client.Instance.appointments.agenda(12345, 54321, '2019-01-31 00:00:00', true).then(data => {
         console.log(data); //=> ["Appointment", ...]
     });
 
@@ -319,11 +319,11 @@ Example:
 
 #### List Appointments/Bookings
 
-Get upcoming appointments by `scheduleId` with `form`, `startTime` and `limit` view params:
+Get upcoming appointments by `scheduleId` with `form`, `startTime`, `limit` and `finish` view params:
 
 Definition:
 
-    Client.Instance.appointments.list(scheduleId, form = null, startTime = null, limit = null)
+    Client.Instance.appointments.list(scheduleId, form = null, startTime = null, limit = null, finish = null)
     
 Example:
 
@@ -338,7 +338,7 @@ If `webhook=true` is present it will trigger any webhooks connected to the accou
 
 Definition:
 
-    Client.Instance.appointments.delete(scheduleId, appointmentId)
+    Client.Instance.appointments.delete(scheduleId, appointmentId, webhook = false)
     
 Example:
 
@@ -352,7 +352,7 @@ Get all forms by template `formId`, with `fromTime`, and `user` params ([see](ht
 
 Definition:
 
-    Client.Instance.forms.list(formId, fromTime = null, user = null)
+    Client.Instance.forms.list(formId, fromTime = null, user = null, limit = null, offset = null)
     
 Example:
 
@@ -404,7 +404,7 @@ Example
 
 #### Get a single coupon code
 
-Retrieve information about a single coupon code use with `promotionCode`.
+Retrieve information about a single coupon code by its alphanumeric `promotionCode` string.
 
 Definition:
 
@@ -412,7 +412,7 @@ Definition:
 
 Example:
 
-    Client.Instance.promotions.promotion(12345).then(data=> {
+    Client.Instance.promotions.promotion('SUMMER10').then(data=> {
         console.log(data); //=> Promotion
     })
 
@@ -426,7 +426,7 @@ Definition:
 
 Example:
 
-    Client.Instance.promotions.duplicatePromotionCode(12345, 94832838).then(data => {
+    Client.Instance.promotions.duplicatePromotionCode('SUMMER11', 'SUMMER10').then(data => {
         console.log(data); //=> null
     });
 
@@ -446,11 +446,13 @@ Example:
 
 ## Examples
 
-The ./examples folder contains npm executable scripts demonstrating how to use the API Client for common requests.
+The ./examples folder contains scripts demonstrating how to use the API Client for common requests.
 
-The examples will require your account name and api key. These can be set in the example files. To run the examples use:
-    
-    node example.js
+The examples require your account name and api key, which are set at the top of each example file. Some also need a schedule id. Run an example with e.g.:
+
+    node examples/schedules.js
+
+The users, appointments and promotions examples create, change and delete data, so run them against a test account.
 
 ## Testing
 
@@ -458,7 +460,7 @@ The HTTP requests can be stubbed by configuring the client with the `dryRun` opt
 
     Client.Instance.dryRun = true;
 
-Note, stubbed requests always invoke callbacks with an empty Array.
+Note, stubbed requests are not sent; they complete with an empty result.
 
 The `Client` also provides a `lastRequest` attribute containing the options object from the last performed request, e.g. 
 
@@ -470,9 +472,15 @@ For additional troubleshooting, the client can be configured with the `verbose` 
 
     Client.Instance.verbose = true;
 
-To run the client tests, you will need to install `mocha`:
+Verbose output includes the request URL, headers and body, and the response body. The `Authorization` header is shown as `[REDACTED]`, but URLs and bodies can contain personal data such as names and email addresses, so don't leave it on in production logs.
 
-    npx mocha
+To run the client's own tests and linter:
+
+    npm install
+    npm test
+    npm run lint
+
+The client throttles to one request per second per client instance. `npm run test:rate` checks this; it takes about 5 seconds and sends nothing over the network.
 
 ## Error Handling
 
@@ -482,7 +490,7 @@ The API Client throws errors to indicate success or failure status, use `try-cat
         await Client.Instance.appointments.create(12345, 67890, {bad_field_name: ''});
     } catch (error) {
         console.log(error.message); //=> Request failed with status 400
-}
+    }
 
 Explanation of the error codes returned:
 

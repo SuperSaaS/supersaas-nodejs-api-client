@@ -1,12 +1,8 @@
 (function() {
-  const Resource = function Resource(attributes) {
-    if (!attributes) return;
+  const assignAttributes = require('./assignAttributes');
 
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        this[key] = attributes[key];
-      }
-    }
+  const Resource = function Resource(attributes) {
+    assignAttributes(this, attributes);
   };
 
   module.exports = Resource;

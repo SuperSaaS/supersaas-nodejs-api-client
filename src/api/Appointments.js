@@ -9,13 +9,9 @@
       } else if (Array.isArray(obj)) {
         return obj.map((attributes) => new Appointment.appointment(attributes));
       } else if (obj['slots']) {
-        return (obj['slots'] || []).map(function(attributes) {
-          return new Appointment.slot(attributes);
-        });
+        return obj['slots'].map((attributes) => new Appointment.slot(attributes));
       } else if (obj['bookings']) {
-        return (obj['bookings'] || obj || []).map(function(attributes) {
-          return new Appointment.appointment(attributes);
-        });
+        return obj['bookings'].map((attributes) => new Appointment.appointment(attributes));
       } else {
         return [];
       }
@@ -49,8 +45,7 @@
           if (err) {
             reject(err);
           } else {
-            const res = mapSlotsOrBookings(data);
-            resolve(new Appointment.appointment(res));
+            resolve(mapSlotsOrBookings(data));
           }
         });
       });
@@ -85,7 +80,7 @@
         form: form ? true : null,
         start: startTime ? validation.validateDatetime(startTime) : null,
         limit: limit ? validation.validateNumber(limit) : null,
-        finish: finish ? validation.validateDatetime(finish) : null
+        finish: finish ? validation.validateDatetime(finish) : null,
       };
 
       return new Promise((resolve, reject) => {
@@ -201,12 +196,14 @@
     };
 
     Appointments.prototype.delete = function(scheduleId, appointmentId, webhook = false) {
-      const query = { schedule_id: validation.validateId(scheduleId) };
-      const params = { webhook: webhook ? 'true' : null };
+      const query = {
+        schedule_id: validation.validateId(scheduleId),
+        webhook: webhook ? 'true' : null,
+      };
       const path = '/bookings/' + validation.validateId(appointmentId);
 
       return new Promise((resolve, reject) => {
-        this.client.delete(path, params, query, (err, data) => {
+        this.client.delete(path, null, query, (err, data) => {
           if (err) {
             reject(err);
           } else {

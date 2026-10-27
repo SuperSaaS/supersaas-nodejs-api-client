@@ -31,7 +31,7 @@ function setupClient(client) {
 async function users() {
     const regexPattern = /users\/(\d+)\.json/;
 
-    console.log("listing schedules...")
+    console.log("listing users...")
     let users = await client.users.list();
     console.log(users);
 

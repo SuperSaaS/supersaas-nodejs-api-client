@@ -1,38 +1,27 @@
-let assert = require('assert')
-let SuperSaaS = require('../src/index')
-let Client = SuperSaaS.Client
+// Checks the client-side throttle (one request per second per client). It uses dryRun, so no request
+// reaches the network, but it takes about 5 seconds and is therefore opt-in: npm run test:rate
+const assert = require('assert');
+const {Client} = require('../src/index');
 
 function newClient() {
-  return new Client({ dryRun: true, accountName: 'Test', api_key: 'xxxxxxxxxxxxxxxxxxxxxx' })
+  return new Client({dryRun: true, accountName: 'Test', api_key: 'xxxxxxxxxxxxxxxxxxxxxx'});
 }
 
-describe('Throttle functionality', function () {
+const describeRate = process.env.RUN_RATE_LIMITER_TEST === 'true' ? describe : describe.skip;
 
-  if (process.env.RUN_RATE_LIMITER_TEST !== 'true') {
-    console.log('Rate limiter test skipped. Set RUN_RATE_LIMITER_TEST=true to run the test.')
-    assert.ok(true)
-    return
-  }
+describeRate('Throttle functionality (set RUN_RATE_LIMITER_TEST=true to run)', function() {
+  this.timeout(10000);
 
-  // Set a higher timeout for the entire test suite
-  this.timeout(10000) // 10 seconds
+  it('takes at least 5 seconds for 6 requests', async function() {
+    const client = newClient();
+    const startTime = Date.now();
 
-  it('should take at least 5 seconds for 25 requests', async function () {
-    const client = newClient()
-
-    // Record the start time
-    const startTime = Date.now()
-
-    // Make 21 requests
+    // The first request goes out immediately, each following one waits for the 1 second window.
     for (let i = 0; i < 6; i++) {
-      await client.request('GET', '/test')
+      await client.request('GET', '/test');
     }
 
-    // Record the end time
-    const endTime = Date.now()
-
-    // Ensure that the elapsed time is greater than or equal to 5.0 seconds
-    const elapsedTimeInSeconds = (endTime - startTime) / 1000
-    assert.ok(elapsedTimeInSeconds >= 5.0, `Elapsed time: ${elapsedTimeInSeconds} seconds`)
+    const elapsedTimeInSeconds = (Date.now() - startTime) / 1000;
+    assert.ok(elapsedTimeInSeconds >= 5.0, `Elapsed time: ${elapsedTimeInSeconds} seconds`);
   });
 });

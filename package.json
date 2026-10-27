@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "mocha --recursive",
-    "schedules": "node -e 'require(\"./examples/schedules\").listSchedules()'"
+    "test:rate": "RUN_RATE_LIMITER_TEST=true mocha test/rate_test.js",
+    "lint": "eslint src",
+    "schedules": "node examples/schedules.js"
   },
   "files": [
     "src/",
@@ -14,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:SuperSaaS/supersaas-nodejs-api-client.git"
+    "url": "git+https://github.com/SuperSaaS/supersaas-nodejs-api-client.git"
   },
   "engines": {
     "node": ">= 20.11.1"
@@ -36,8 +38,8 @@
   },
   "homepage": "https://supersaas.com",
   "devDependencies": {
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-google": "^0.14.0",
-    "mocha": "^12.0.0-beta-7"
+    "mocha": "^12.0.3"
   }
 }

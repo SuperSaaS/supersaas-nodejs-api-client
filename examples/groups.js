@@ -8,7 +8,7 @@ function setupClient(client) {
 }
 
 async function groups() {
-    console.log("listing goup...")
+    console.log("listing groups...")
     let groups = await client.groups.list();
     console.log(groups);
 }

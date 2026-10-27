@@ -31,7 +31,7 @@
     Users.prototype.get = function(userId, form = false) {
       const path = this._userPath(userId);
       const query = {
-        form: form ? true : null
+        form: form ? true : null,
       };
 
       return new Promise((resolve, reject) => {
@@ -121,11 +121,11 @@
 
     Users.prototype.delete = function(userId, webhook = false) {
       const path = this._userPath(userId);
-      const params = {
+      const query = {
         webhook: webhook ? 'true' : null,
       };
       return new Promise((resolve, reject) => {
-        this.client.delete(path, params, null, (err, data) => {
+        this.client.delete(path, null, query, (err, data) => {
           if (err) {
             reject(err);
           } else {

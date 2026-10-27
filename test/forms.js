@@ -17,9 +17,14 @@ describe('Forms', function() {
 
     it("gets list", async function() {
       let client = newClient()
-      client.forms.list(12345, new Date(2010,1,1), null).then( (data) => {
-        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/forms.json?form_id=12345&from=2010-1-2%200%3A0%3A00')
-      })
+      await client.forms.list(12345, new Date(2010, 1, 1), null)
+      assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/forms.json?form_id=12345&from=2010-02-01%2000%3A00%3A00')
+    })
+
+    it("gets list with user and pagination", async function() {
+      let client = newClient()
+      await client.forms.list(12345, null, 'user', 10, 20)
+      assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/forms.json?form_id=12345&user=user&limit=10&offset=20')
     })
 
     it("list of super forms", function(done) {

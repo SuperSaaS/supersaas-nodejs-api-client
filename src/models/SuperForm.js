@@ -1,12 +1,8 @@
 (function() {
-  const SuperForm = function SuperForm(attributes) {
-    if (!attributes) return;
+  const assignAttributes = require('./assignAttributes');
 
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        this[key] = attributes[key];
-      }
-    }
+  const SuperForm = function SuperForm(attributes) {
+    assignAttributes(this, attributes);
   };
 
   module.exports = SuperForm;

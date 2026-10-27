@@ -61,7 +61,7 @@
     const waitTime = Math.max(0, WINDOW_SIZE - elapsed);
 
     if (waitTime > 0) {
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
     }
 
     // Important: Update timestamp AFTER the wait to ensure full intervals
@@ -85,7 +85,7 @@
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'User-Agent': this._userAgent(),
-        'Authorization': 'Basic ' + new Buffer.from(this.accountName + ':' + this.api_key).toString('base64'),
+        'Authorization': 'Basic ' + Buffer.from(this.accountName + ':' + this.api_key).toString('base64'),
       };
 
       if (!['GET', 'POST', 'PUT', 'DELETE'].includes(httpMethod)) {
@@ -124,13 +124,13 @@
 
       const verboseLogging = this.verbose;
       if (verboseLogging) {
-        console.log(requestBody);
+        console.log({...requestBody, headers: {...headers, Authorization: '[REDACTED]'}});
       }
-      const response = await fetch(requestBody.path, requestBody);
+      const response = await this._withContentLength(await fetch(requestBody.path, requestBody));
 
       if (!response.ok) {
         if (verboseLogging) {
-          console.error(`Failed request ${response.status}, ${response.body}`);
+          console.error(`Failed request ${response.status}, ${response.statusText}`);
         }
         throw new Error(`Request failed with status ${response.status}`);
       }
@@ -147,7 +147,6 @@
           body = await response.text();
         }
       } else {
-        console.log('Unsupported content type:', contentType);
         throw new Error(`Unsupported content type: ${contentType}`);
       }
 
@@ -157,7 +156,7 @@
             body = response.headers.get('location');
           }
           if (verboseLogging) {
-            console.log("httpMethod: ", httpMethod, ", status: ", response.status);
+            console.log('httpMethod: ', httpMethod, ', status: ', response.status);
             console.log(body);
           }
           callback(null, body);
@@ -171,7 +170,9 @@
         return body;
       }
     } catch (error) {
-      console.log(error);
+      if (this.verbose) {
+        console.log(error);
+      }
       if (callback) {
         callback(error, null);
       } else {
@@ -195,6 +196,16 @@
     });
     return parsed;
   };
+  // Chunked or compressed responses have no Content-Length. Buffer the body and set it, so the parsing below sees the real size.
+  Client.prototype._withContentLength = async function(response) {
+    if (response.headers.has('Content-Length')) {
+      return response;
+    }
+    const body = Buffer.from(await response.arrayBuffer());
+    const headers = new Headers(response.headers);
+    headers.set('Content-Length', String(body.length));
+    return new Response(body.length > 0 ? body : null, {status: response.status, statusText: response.statusText, headers: headers});
+  };
 
   const config = {
     accountName: process.env['SSS_API_ACCOUNT_NAME'],
@@ -206,7 +217,7 @@
   Client.Instance = new Client(config);
   Client.configure = function(configuration) {
     for (const key in config) {
-      if (configuration[key]) {
+      if (configuration[key] !== undefined && configuration[key] !== null) {
         Client.Instance[key] = configuration[key];
       }
     }
