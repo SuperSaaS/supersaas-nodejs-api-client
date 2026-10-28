@@ -8,6 +8,8 @@
   const Users = require('./api/Users');
   const Promotions = require('./api/Promotions');
   const Groups = require('./api/Groups');
+  const Slots = require('./api/Slots');
+  const Hooks = require('./api/Hooks');
 
   const DEFAULT_HOST = 'https://www.supersaas.com';
 
@@ -25,10 +27,12 @@
     this.users = new Users(this);
     this.groups = new Groups(this);
     this.promotions = new Promotions(this);
+    this.slots = new Slots(this);
+    this.hooks = new Hooks(this);
     this.q = new Array(MAX_PER_WINDOW);
   };
   Client.API_VERSION = '3';
-  Client.VERSION = '2.0.2';
+  Client.VERSION = '2.1.0';
 
   Client.prototype.get = function(path, query, callback) {
     return this.request('GET', path, null, query, callback);
@@ -44,6 +48,19 @@
 
   Client.prototype.delete = function(path, params, query, callback) {
     return this.request('DELETE', path, params, query, callback);
+  };
+
+  // Resolves true when the credentials are valid (204 No Content), rejects with the usual error otherwise.
+  Client.prototype.ping = function() {
+    return new Promise((resolve, reject) => {
+      this.get('/ping', null, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
+    });
   };
 
   const WINDOW_SIZE = 1000;
@@ -132,17 +149,27 @@
         if (verboseLogging) {
           console.error(`Failed request ${response.status}, ${response.statusText}`);
         }
-        throw new Error(`Request failed with status ${response.status}`);
+        const error = new Error(`Request failed with status ${response.status}`);
+        error.status = response.status;
+        error.errors = await this._parseErrors(response);
+        throw error;
       }
 
       const contentType = response.headers.get('Content-Type');
+      const location = response.headers.get('location');
+      const isCreated = response.status === 201 && httpMethod === 'POST';
       let body;
 
-      if (contentType.includes('application/json')) {
+      if (response.status === 204) {
+        // No Content: nothing to parse, and the content type may be absent.
+      } else if (contentType && contentType.includes('application/json')) {
         if (response.headers.get('Content-Length') > 0) {
           body = await response.json();
+        } else if (isCreated && !location) {
+          // Chunked responses have no Content-Length; a created resource without a Location is described by its body.
+          body = await this._parseJson(response);
         }
-      } else if (contentType.includes('text/plain')) {
+      } else if (contentType && contentType.includes('text/plain')) {
         if (response.headers.get('Content-Length') > 0) {
           body = await response.text();
         }
@@ -152,8 +179,8 @@
 
       if (callback) {
         try {
-          if (response.status === 201 && httpMethod === 'POST') {
-            body = response.headers.get('location');
+          if (isCreated && location) {
+            body = location;
           }
           if (verboseLogging) {
             console.log('httpMethod: ', httpMethod, ', status: ', response.status);
@@ -164,8 +191,8 @@
           callback({errors: [{title: error.message}]}, null);
         }
       } else {
-        if (response.status === 201 && httpMethod === 'POST') {
-          body = response.headers.get('location');
+        if (isCreated && location) {
+          body = location;
         }
         return body;
       }
@@ -181,6 +208,19 @@
     }
   };
 
+  Client.prototype._parseJson = async function(response) {
+    const text = await response.text();
+    return text ? JSON.parse(text) : undefined;
+  };
+  // The `errors` array of an error response body; [] when the body is empty, not JSON or has no errors.
+  Client.prototype._parseErrors = async function(response) {
+    try {
+      const parsed = await this._parseJson(response);
+      return parsed && Array.isArray(parsed.errors) ? parsed.errors : [];
+    } catch (e) {
+      return [];
+    }
+  };
   Client.prototype._requestModule = function(url) {
     return url.protocol === 'https' ? https : http;
   };

@@ -125,6 +125,20 @@ Example
         console.log(data); //=> ["FieldList", ...]
     });
 
+#### List Input Fields of a Schedule
+
+Get the fields that can be set when creating a booking on a schedule by `scheduleId` (each has `name`, `type`, `label` and `required`):
+
+Definition:
+
+    Client.Instance.schedules.inputFieldList(scheduleId)
+
+Example
+
+    Client.Instance.schedules.inputFieldList(12345).then(data => {
+        console.log(data); //=> ["FieldList", ...]
+    });
+
 #### Create User
 
 Create a user with user attributes params.
@@ -219,6 +233,20 @@ Example:
         console.log(data); //=> [FieldList, ...]
     });
     
+#### List Input Fields of User object
+
+Get the user fields that can be set when creating a user.
+
+Definition:
+
+    Client.Instance.users.inputFieldList()
+
+Example:
+
+    Client.Instance.users.inputFieldList().then(data => {
+        console.log(data); //=> [FieldList, ...]
+    });
+
 #### Get Recent Changes
 
 Get recently changed appointments by `scheduleId`, with `from` time, `to` time, `user` user, `slot` view params (see [docs](https://www.supersaas.com/info/dev/appointment_api#recent_changes)),
@@ -289,6 +317,10 @@ Example:
         console.log(data); //=> 'https://www.supersaas.com/api/bookings/12345678.json'
     });
 
+**Input attributes** are sent on create and update: `start`, `finish`, `full_name`, `email`, `address`, `mobile`, `phone`, `country`, `field_1`, `field_2`, `field_1_r`, `field_2_r`, `super_field`, `description` and `form_id`, plus what is booked: `resource_id` on a resource schedule, or `slot_id` and `quantity` (number of places) on a capacity schedule. Any other attribute is not sent. The API does not support creating bookings on service schedules.
+
+**Read-only attributes** are returned when reading appointments but never sent: `id`, `created_on`, `updated_on`, `created_by`, `updated_by`, `user_id`, `deleted`, `res_name`, `service_id`, `service_name`, `waitlisted`, and `form` when reading with `form` set.
+
 #### Update Appointment/Booking
 
 Update an appointment by `scheduleId` and `appointmentId` with appointment attributes params, see the above link:
@@ -343,6 +375,78 @@ Definition:
 Example:
 
     Client.Instance.appointments.delete(12345, 67890).then(data => { 
+        console.log(data); //=> null
+    });
+
+#### List Slots (capacity schedules)
+
+Slots are only available for capacity type schedules (other schedules return 405). Dates are `YYYY-MM-DD HH:MM:SS` strings or `Date` objects. A `capacity` of `'-'` means unlimited, `0` means no places.
+
+_Note: attributes that are `null` or `undefined` are not sent, so `capacity: null` leaves the capacity unchanged. Use `'-'` for unlimited._
+
+Get slots by `scheduleId`, with optional `startTime`/`finish` filters and `limit` (default 100, max 2500)/`offset` pagination:
+
+Definition:
+
+    Client.Instance.slots.list(scheduleId, startTime = null, finish = null, limit = null, offset = null)
+
+Example:
+
+    Client.Instance.slots.list(12345, '2030-01-01 00:00:00').then(data => {
+        console.log(data); //=> [Slot, ...]
+    });
+
+#### Get Slot
+
+Definition:
+
+    Client.Instance.slots.get(scheduleId, slotId)
+
+Example:
+
+    Client.Instance.slots.get(12345, 67890).then(data => {
+        console.log(data); //=> Slot
+    });
+
+#### Create Slot
+
+Create a slot with `start`, `finish`, `title`, `description`, `location`, `capacity`, `price` and `color` attributes. Resolves to the URL of the new slot:
+
+Definition:
+
+    Client.Instance.slots.create(scheduleId, attributes)
+
+Example:
+
+    Client.Instance.slots.create(12345, {start: '2030-01-02 10:00:00', finish: '2030-01-02 11:00:00', title: 'Yoga', capacity: 12}).then(data => {
+        console.log(data); //=> "https://www.supersaas.com/api/slots/67890.json"
+    });
+
+#### Update Slot
+
+Only the given attributes are changed:
+
+Definition:
+
+    Client.Instance.slots.update(scheduleId, slotId, attributes)
+
+Example:
+
+    Client.Instance.slots.update(12345, 67890, {title: 'Evening yoga', capacity: '-'}).then(data => {
+        console.log(data); //=> null
+    });
+
+#### Delete Slot
+
+Deletes the slot and any bookings on it.
+
+Definition:
+
+    Client.Instance.slots.delete(scheduleId, slotId)
+
+Example:
+
+    Client.Instance.slots.delete(12345, 67890).then(data => {
         console.log(data); //=> null
     });
 
@@ -500,7 +604,51 @@ Explanation of the error codes returned:
     404 HTTP Request Error: Not Found (non existent user id for example)
     501 Not yet implemented for service type schedule
     403 Unauthorized, check your credentials
-    405 Not available for capacity type schedule
+    405 Not available for this schedule type (for example resources on a capacity schedule, or slots on a schedule that isn't capacity type)
+
+#### Ping
+
+Check that the account name and API key are valid. Resolves to `true`, and rejects with the usual error (status 401) otherwise.
+
+Definition:
+
+    Client.Instance.ping()
+
+Example:
+
+    Client.Instance.ping().then(ok => {
+        console.log(ok); //=> true
+    });
+
+#### Webhooks
+
+Create a webhook with a `targetUrl` that is called for an `event`: `U` user created, `M` user modified, `N` new appointment, `C` changed appointment, `R` reminder, `F` follow-up, `S` form submitted, `O` form changed, `H` mail, `P` credit purchase. `parentId` is the schedule id for `N`, `C`, `R` and `F`, and the super form id for `S` and `O`; for the other events it is required but ignored.
+
+Definition:
+
+    Client.Instance.hooks.create(targetUrl, event, parentId)
+    Client.Instance.hooks.delete(hookId, parentId)
+    Client.Instance.hooks.list()
+
+Example:
+
+    Client.Instance.hooks.create('https://www.example.com/hook', 'N', 12345).then(data => {
+        console.log(data); //=> {id: 123, parent_id: 12345}
+    });
+
+    Client.Instance.hooks.delete(123, 12345).then(data => {
+        console.log(data); //=> undefined
+    });
+
+#### Errors
+
+A failed request rejects with an `Error` whose message is `Request failed with status <status>`. The error also has a `status` (the HTTP status code) and `errors`, the array of errors the server returned (`[]` when the response has none):
+
+    Client.Instance.users.get(999999999).catch(err => {
+        console.log(err.message); //=> 'Request failed with status 404'
+        console.log(err.status); //=> 404
+        console.log(err.errors); //=> [{status: '404', title: 'Not found'}]
+    });
 
 ## Additional Information
 
