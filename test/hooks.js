@@ -34,4 +34,12 @@ describe('Hooks', function() {
     assert.throws(() => client.hooks.create('https://www.example.com/hook', 'U', 'abc'))
     assert.throws(() => client.hooks.delete('abc', 1))
   })
+
+  it("rejects a missing target url or event", function() {
+    let client = newClient()
+    assert.throws(() => client.hooks.create('', 'U', 12345), /Required parameter is missing/)
+    assert.throws(() => client.hooks.create(null, 'U', 12345), /Required parameter is missing/)
+    assert.throws(() => client.hooks.create('https://www.example.com/hook', '', 12345), /Required parameter is missing/)
+    assert.throws(() => client.hooks.create('https://www.example.com/hook', undefined, 12345), /Required parameter is missing/)
+  })
 })

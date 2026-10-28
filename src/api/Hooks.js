@@ -26,8 +26,8 @@
     Hooks.prototype.create = function(targetUrl, event, parentId) {
       const path = '/hooks';
       const params = {
-        target_url: targetUrl,
-        event: event,
+        target_url: validation.validatePresent(targetUrl),
+        event: validation.validatePresent(event),
         parent_id: validation.validateId(parentId),
       };
 
