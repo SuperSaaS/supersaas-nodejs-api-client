@@ -5,8 +5,10 @@
       Appointments: require('./api/Appointments'),
       Forms: require('./api/Forms'),
       Groups: require('./api/Groups'),
+      Hooks: require('./api/Hooks'),
       Promotions: require('./api/Promotions'),
       Schedules: require('./api/Schedules'),
+      Slots: require('./api/Slots'),
       Users: require('./api/Users'),
 
     },
@@ -18,6 +20,7 @@
       Promotion: require('./models/Promotion'),
       Resource: require('./models/Resource'),
       Schedule: require('./models/Schedule'),
+      Slot: require('./models/Slot'),
       SuperForm: require('./models/SuperForm'),
       User: require('./models/User'),
 

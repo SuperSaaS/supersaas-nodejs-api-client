@@ -63,6 +63,24 @@
       });
     };
 
+    Schedules.prototype.inputFieldList = function(scheduleId) {
+      const path = '/input_field_list';
+      const query = {schedule_id: validation.validateId(scheduleId)};
+
+      return new Promise((resolve, reject) => {
+        this.client.get(path, query, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            const res = data.map(function(attributes) {
+              return new FieldList(attributes);
+            });
+            resolve(res);
+          }
+        });
+      });
+    };
+
     return Schedules;
   })();
 }).call(this);

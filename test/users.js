@@ -88,4 +88,11 @@ describe('Users', function() {
             done()
         })
     })
+
+    it("lists user's input fields", async function() {
+        let client = newClient()
+        await client.users.inputFieldList()
+        assert.equal(client.lastRequest.method, 'GET')
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/input_field_list.json')
+    })
 })

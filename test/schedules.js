@@ -30,4 +30,11 @@ describe('Schedules', function() {
             done()
         })
     })
+
+    it("lists schedule input fields", async function() {
+        let client = newClient()
+        await client.schedules.inputFieldList(12345)
+        assert.equal(client.lastRequest.method, 'GET')
+        assert.equal(client.lastRequest.path, 'https://www.supersaas.com/api/input_field_list.json?schedule_id=12345')
+    })
 })

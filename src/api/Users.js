@@ -152,6 +152,23 @@
       });
     };
 
+    Users.prototype.inputFieldList = function() {
+      const path = '/input_field_list';
+
+      return new Promise((resolve, reject) => {
+        this.client.get(path, null, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            const res = data.map(function(attributes) {
+              return new FieldList(attributes);
+            });
+            resolve(res);
+          }
+        });
+      });
+    };
+
     Users.prototype._userPath = function(userId) {
       if (!userId || userId === '') {
         return '/users';
